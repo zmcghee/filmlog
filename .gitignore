@@ -1,0 +1,4 @@
+*.pyc
+manage.py
+secret.py
+wsgi.py
