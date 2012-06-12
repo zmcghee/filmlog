@@ -5,6 +5,8 @@ FORMATS = (('0', '35mm'), ('1', 'DCP'), ('2', 'Blu-ray'), ('3', 'DVD'),
            ('4', 'HD Digital Download'), ('5', 'SD Digital Download'),
            ('6', 'HD Streaming'), ('7', 'SD Streaming'),
            ('8', 'HD Broadcast'),)
+STARS = (('4', 'Masterpiece'), ('3', 'A Must See'), ('2', 'Average'),
+         ('1', 'Poor'),)
 
 class Director(models.Model):
 	name = models.CharField(max_length=100, db_index=True)
@@ -19,6 +21,8 @@ class Movie(models.Model):
 	premiere_year = models.CharField(max_length=4)
 	nyc_release_year = models.CharField(max_length=4, null=True, blank=True)
 	directors = models.ManyToManyField(Director, related_name='movies')
+	rating = models.IntegerField(null=True, blank=True)
+	stars = models.CharField(max_length=1, choices=STARS, null=True, blank=True)
 
 	def set_title(self, complete_title):
 		articles = ("A", "AN", "THE", "EL", "LA", "LE", "IL", "L'")
@@ -40,6 +44,9 @@ class Movie(models.Model):
 
 	title = property(get_title, set_title)
 
+	class Meta:
+		ordering = ('title_sans_article', 'leading_article', 'premiere_year',)
+
 	def __unicode__(self):
 		return self.title
 
@@ -51,10 +58,21 @@ class Venue(models.Model):
 
 class Entry(models.Model):
 	movie = models.ForeignKey(Movie, related_name='entries')
-	date = models.DateField(auto_now_add=True)
+	date = models.DateField()
 	venue = models.ForeignKey(Venue, related_name='entries')
 	format = models.CharField(max_length=1, choices=FORMATS)
+	rating = models.IntegerField(null=True, blank=True)
+	stars = models.CharField(max_length=1, choices=STARS, null=True, blank=True)
 
 	@property
 	def video(self):
 		return not self.venue.theatrical
+
+	def save(self, *args, **kwargs):
+		s = super(Entry, self).save(*args, **kwargs)
+		if self.rating:
+			self.movie.rating = self.rating
+		if self.stars:
+			self.movie.stars = self.rating
+		if self.rating or self.stars:
+			self.movie.save()
