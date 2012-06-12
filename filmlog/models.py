@@ -4,20 +4,23 @@ GENDERS = (('M', 'Male'), ('F', 'Female'),)
 FORMATS = (('0', '35mm'), ('1', 'DCP'), ('2', 'Blu-ray'), ('3', 'DVD'),
            ('4', 'HD Digital Download'), ('5', 'SD Digital Download'),
            ('6', 'HD Streaming'), ('7', 'SD Streaming'),
-           ('8', 'HD Broadcast'),)
+           ('8', 'HD Broadcast'), ('9', 'Video (unknown)'),)
 STARS = (('4', 'Masterpiece'), ('3', 'A Must See'), ('2', 'Average'),
-         ('1', 'Poor'),)
+         ('1', 'Poor'), ('0', 'Walkout'),)
 
 class Director(models.Model):
 	name = models.CharField(max_length=100, db_index=True)
-	imdb = models.IntegerField()
+	imdb = models.IntegerField(null=True, blank=True)
 	gender = models.CharField(max_length=1, choices=GENDERS)
 	birth_year = models.CharField(max_length=4, null=True, blank=True)
+
+	def __unicode__(self):
+		return self.name
 
 class Movie(models.Model):
 	title_sans_article = models.CharField(max_length=250, db_index=True)
 	leading_article = models.CharField(max_length=3, null=True, blank=True)
-	imdb = models.IntegerField()
+	imdb = models.IntegerField(null=True, blank=True)
 	premiere_year = models.CharField(max_length=4)
 	nyc_release_year = models.CharField(max_length=4, null=True, blank=True)
 	directors = models.ManyToManyField(Director, related_name='movies')
@@ -59,8 +62,8 @@ class Venue(models.Model):
 class Entry(models.Model):
 	movie = models.ForeignKey(Movie, related_name='entries')
 	date = models.DateField()
-	venue = models.ForeignKey(Venue, related_name='entries')
-	format = models.CharField(max_length=1, choices=FORMATS)
+	venue = models.ForeignKey(Venue, related_name='entries', null=True, blank=True)
+	format = models.CharField(max_length=1, choices=FORMATS, null=True, blank=True)
 	rating = models.IntegerField(null=True, blank=True)
 	stars = models.CharField(max_length=1, choices=STARS, null=True, blank=True)
 
