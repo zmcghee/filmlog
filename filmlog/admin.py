@@ -21,7 +21,7 @@ class EntryAdmin(admin.ModelAdmin):
 	list_display = ('pk', 'date', 'movie', 'venue', 'format', 'in_3d', 'repeat', 'walkout',)
 	list_display_links = ('pk',)
 	list_editable = ('movie', 'venue', 'format', 'in_3d', 'repeat', 'walkout',)
-	list_filter = ('venue', 'format', 'in_3d', 'repeat', 'movie__premiere_year', 'movie__nyc_release_year',)
+	list_filter = ('venue', 'format', 'in_3d', 'repeat', 'walkout', 'movie__premiere_year', 'movie__nyc_release_year',)
 	raw_id_fields = ('movie',)
 	search_fields = ['venue__name', 'movie__title_sans_article', 'movie__imdb',]
 

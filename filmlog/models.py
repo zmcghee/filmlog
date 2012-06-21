@@ -1,5 +1,6 @@
 from django.db import models
 
+# Most of these are pretty clear. DCP is inclusive of any digital format presented at a DCP-capable venue (since usually they're upconverting even if the source material is HDCAM or Blu-ray). Broadcast/VOD basically just means anything I've watched on TV via my cable provider.
 FORMATS = (('0', '35mm'), ('1', 'DCP'), ('2', 'Blu-ray'), ('3', 'DVD'),
            ('4', 'File/Download'), ('6', 'Streaming'), ('8', 'Broadcast/VOD'),
            ('I', 'IMAX (Film)'), ('L', 'IMAX (Digital)'), ('S', '70mm'),)
