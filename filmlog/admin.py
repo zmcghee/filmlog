@@ -14,7 +14,7 @@ class MovieAdmin(admin.ModelAdmin):
 	list_display_links = ('pk', 'title',)
 	list_editable = ('premiere_year', 'nyc_release_year', 'imdb',)
 	list_filter = ('premiere_year', 'nyc_release_year',)
-	search_fields = ['title_sans_article', 'imdb', 'directors',]
+	search_fields = ['title_sans_article', 'imdb', 'directors__name',]
 
 class EntryAdmin(admin.ModelAdmin):
 	date_hierarchy = 'date'
@@ -23,7 +23,7 @@ class EntryAdmin(admin.ModelAdmin):
 	list_editable = ('movie', 'venue', 'format', 'in_3d', 'repeat', 'walkout',)
 	list_filter = ('venue', 'format', 'in_3d', 'repeat', 'movie__premiere_year', 'movie__nyc_release_year',)
 	raw_id_fields = ('movie',)
-	search_fields = ['movie__title_sans_article', 'movie__imdb', 'movie__directors',]
+	search_fields = ['venue__name', 'movie__title_sans_article', 'movie__imdb',]
 
 admin.site.register(Director, DirectorAdmin)
 admin.site.register(Movie, MovieAdmin)

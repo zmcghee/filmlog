@@ -1,9 +1,8 @@
 from django.db import models
 
 FORMATS = (('0', '35mm'), ('1', 'DCP'), ('2', 'Blu-ray'), ('3', 'DVD'),
-           ('4', 'HD Digital Download'), ('5', 'SD Digital Download'),
-           ('6', 'HD Streaming'), ('7', 'SD Streaming'),
-           ('8', 'HD Broadcast'), ('9', 'Video (unknown)'),)
+           ('4', 'File/Download'), ('6', 'Streaming'), ('8', 'Broadcast/VOD'),
+           ('I', 'IMAX (Film)'), ('L', 'IMAX (Digital)'), ('S', '70mm'),)
 
 class Director(models.Model):
 	name = models.CharField(max_length=100, db_index=True)
@@ -51,8 +50,8 @@ class Movie(models.Model):
 
 class Venue(models.Model):
 	name = models.CharField(max_length=100)
-	city = models.CharField(max_length=30)
-	state = models.CharField(max_length=2)
+	city = models.CharField(max_length=30, null=True, blank=True)
+	state = models.CharField(max_length=2, null=True, blank=True)
 	theatrical = models.BooleanField()
 	website = models.URLField(null=True, blank=True)
 
