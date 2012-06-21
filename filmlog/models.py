@@ -1,21 +1,19 @@
 from django.db import models
 
-GENDERS = (('M', 'Male'), ('F', 'Female'),)
 FORMATS = (('0', '35mm'), ('1', 'DCP'), ('2', 'Blu-ray'), ('3', 'DVD'),
            ('4', 'HD Digital Download'), ('5', 'SD Digital Download'),
            ('6', 'HD Streaming'), ('7', 'SD Streaming'),
            ('8', 'HD Broadcast'), ('9', 'Video (unknown)'),)
-STARS = (('4', 'Masterpiece'), ('3', 'A Must See'), ('2', 'Average'),
-         ('1', 'Poor'), ('0', 'Walkout'),)
 
 class Director(models.Model):
 	name = models.CharField(max_length=100, db_index=True)
 	imdb = models.IntegerField(null=True, blank=True)
-	gender = models.CharField(max_length=1, choices=GENDERS)
-	birth_year = models.CharField(max_length=4, null=True, blank=True)
 
 	def __unicode__(self):
 		return self.name
+
+	class Meta:
+		ordering = ('name',)
 
 class Movie(models.Model):
 	title_sans_article = models.CharField(max_length=250, db_index=True)
@@ -24,8 +22,6 @@ class Movie(models.Model):
 	premiere_year = models.CharField(max_length=4)
 	nyc_release_year = models.CharField(max_length=4, null=True, blank=True)
 	directors = models.ManyToManyField(Director, related_name='movies')
-	rating = models.IntegerField(null=True, blank=True)
-	stars = models.CharField(max_length=1, choices=STARS, null=True, blank=True)
 
 	def set_title(self, complete_title):
 		articles = ("A", "AN", "THE", "EL", "LA", "LE", "IL", "L'")
@@ -47,35 +43,42 @@ class Movie(models.Model):
 
 	title = property(get_title, set_title)
 
+	def __unicode__(self):
+		return "%s (%s)" % (self.title, self.premiere_year)
+
 	class Meta:
 		ordering = ('title_sans_article', 'leading_article', 'premiere_year',)
-
-	def __unicode__(self):
-		return self.title
 
 class Venue(models.Model):
 	name = models.CharField(max_length=100)
 	city = models.CharField(max_length=30)
 	state = models.CharField(max_length=2)
 	theatrical = models.BooleanField()
+	website = models.URLField(null=True, blank=True)
+
+	def __unicode__(self):
+		return self.name
+
+	class Meta:
+		ordering = ('name',)
 
 class Entry(models.Model):
 	movie = models.ForeignKey(Movie, related_name='entries')
 	date = models.DateField()
 	venue = models.ForeignKey(Venue, related_name='entries', null=True, blank=True)
 	format = models.CharField(max_length=1, choices=FORMATS, null=True, blank=True)
-	rating = models.IntegerField(null=True, blank=True)
-	stars = models.CharField(max_length=1, choices=STARS, null=True, blank=True)
+	in_3d = models.BooleanField(default=False)
+	repeat = models.BooleanField(default=False)
+	walkout = models.BooleanField(default=False)
+	notes = models.TextField(blank=True, null=True)
+
+	def __unicode__(self):
+		return "%s - %s " % (self.movie.title, self.date)
+
+	class Meta:
+		ordering = ('-pk',)
+		verbose_name_plural = 'entries'
 
 	@property
 	def video(self):
 		return not self.venue.theatrical
-
-	def save(self, *args, **kwargs):
-		s = super(Entry, self).save(*args, **kwargs)
-		if self.rating:
-			self.movie.rating = self.rating
-		if self.stars:
-			self.movie.stars = self.rating
-		if self.rating or self.stars:
-			self.movie.save()
