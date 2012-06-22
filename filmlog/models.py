@@ -92,10 +92,11 @@ class Entry(models.Model):
 	date = models.DateField()
 	venue = models.ForeignKey(Venue, related_name='entries', null=True, blank=True)
 	format = models.CharField(max_length=1, choices=FORMATS, null=True, blank=True)
-	in_3d = models.BooleanField(default=False)
-	repeat = models.BooleanField(default=False)
-	walkout = models.BooleanField(default=False)
+	in_3d = models.BooleanField(default=False, verbose_name='3d')
+	repeat = models.BooleanField(default=False, verbose_name='//')
+	walkout = models.BooleanField(default=False, verbose_name='W')
 	notes = models.TextField(blank=True, null=True)
+	recommended = models.BooleanField(default=False, verbose_name='+')
 
 	def __unicode__(self):
 		return "%s - %s " % (self.movie.title, self.date)
