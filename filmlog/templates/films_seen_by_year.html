@@ -1,0 +1,32 @@
+<html>
+<head><title>Films I Saw in {{ year }}</title></head>
+
+<body bgcolor="#FFFFFF" text="#000000" link="#010FFF">
+
+{% if year == 2010 %}
+<b><i>Obviously this year's log is incomplete. I didn't start regularly keeping a log of what I watch until 6 Nov 2010. Sorry.</i></b><p>
+{% endif %}
+
+<font color=purple size=-4 face=Times>
+
+Movies seen in formats like 35mm, 70mm, IMAX, and 3-D (or any combination thereof) are noted as such in brackets at the end of applicable entries.<p>
+
+"*" after a film title indicates that I saw it on some form of home 
+video.<p>
+
+Right-leaning slashes /surrounding/ a film indicate that I had seen the 
+film previously in its entirety. Left-leaning slashes \surrounding\ a 
+film indicate that I had previously seen (roughly) the film's first two reels.<p>
+
+An entry beginning with "W/O" in lieu of a numeral indicates that I 
+walked out at the end of the second reel (or, in the case of a film 
+watched on home video, that I stopped the tape or DVD at the 40-minute 
+mark). This doesn't necessarily mean that I despised the film, but I at least felt there was no compelling reason to stick around. It's also possible I was 
+unable to finish watching the film for reasons beyond my control, e.g. 
+mechanical failure, medical emergency, airplane landing, etc.<p></font>
+
+<center><a href="#lastfive">Jump to the last five.</a></center>
+<pre><font color=black>
+{% for entry in entries %}
+<hr>{% if entry.walkout %}W/O{% else %}{% if entry.count < 10 %}00{% else %}{% if entry.count < 100 %}0{% endif %}{% endif %}{{ entry.count }}{% endif %}. ({{ entry.date|date:"d M" }})  {% if entry.repeat %}{% if entry.reverse_slashes %}\{% else %}/{% endif %}{% endif %}{{ entry.movie.title }}{% if entry.repeat %}{% if entry.reverse_slashes %}\{% else %}/{% endif %}{% endif %} ({{ entry.movie.premiere_year }}, {{ entry.movie.directors_as_str }}){% if entry.video %}*{% endif %}{% if entry.in_3d %} [{% if entry.format == '0' %}35mm {% endif %}{% if entry.format in imax %}IMAX {% if entry.format == 'I' %} 70mm {% endif %}{% endif %}3-D] {% else %}{% if entry.format == '0' %} [35mm] {% endif %}{% endif %}{% if not entry.in_3d and entry.format in imax %} [IMAX{% if entry.format == 'I' %} 70mm{% endif %}] {% endif %}{% if entry.format == 'S' %} [70mm]{% endif %}{% endfor %}
+<hr><a name=lastFive></a>

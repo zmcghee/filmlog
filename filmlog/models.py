@@ -23,6 +23,17 @@ class Movie(models.Model):
 	nyc_release_year = models.CharField(max_length=4, null=True, blank=True)
 	directors = models.ManyToManyField(Director, related_name='movies')
 
+	@property
+	def directors_as_str(self):
+		directors = self.directors.all()
+		if directors.count() == 0:
+			return ''
+		if directors.count() == 1:
+			return directors[0].name
+		all = list(directors.values_list('name', flat=True))
+		last = all.pop(-1)
+		return "%s & %s" % (", ".join(all), last)
+
 	def set_title(self, complete_title):
 		articles = ("A", "AN", "THE", "EL", "LA", "LE", "IL", "L'")
 		try:
@@ -62,6 +73,20 @@ class Venue(models.Model):
 	class Meta:
 		ordering = ('name',)
 
+def find_index_for_entry(year, obj):
+	if obj.walkout:
+		return None
+	qs = Entry.objects.filter(date__year=year, walkout=False)
+	return list(qs.values_list('id', flat=True)).index(obj.id) + 1
+
+def only_walkouts_prior_to_entry(obj):
+	if obj.repeat:
+		qs = Entry.objects.filter(movie=obj.movie, date__lte=obj.date).exclude(id=obj.id)
+		if qs.count() > 0:
+			if qs.filter(walkout=True).count() == qs.count():
+				return True
+	return False
+
 class Entry(models.Model):
 	movie = models.ForeignKey(Movie, related_name='entries')
 	date = models.DateField()
@@ -76,9 +101,17 @@ class Entry(models.Model):
 		return "%s - %s " % (self.movie.title, self.date)
 
 	class Meta:
-		ordering = ('-pk',)
+		ordering = ('pk',)
 		verbose_name_plural = 'entries'
 
 	@property
 	def video(self):
-		return not self.venue.theatrical
+		return not self.venue or not self.venue.city
+
+	@property
+	def count(self):
+		return find_index_for_entry(self.date.year, self)
+
+	@property
+	def reverse_slashes(self):
+		return only_walkouts_prior_to_entry(self)

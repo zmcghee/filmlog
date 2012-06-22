@@ -1,5 +1,5 @@
 from conf.environments.dev import DEBUG
-from conf.secret import ADMINS, DATABASES, SECRET_KEY
+from conf.secret import ADMINS, DATABASES, PROJECT_PATH, SECRET_KEY
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -88,6 +88,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    PROJECT_PATH + '/templates',
 )
 
 INSTALLED_APPS = (
