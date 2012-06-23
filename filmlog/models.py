@@ -97,6 +97,7 @@ class Entry(models.Model):
 	walkout = models.BooleanField(default=False, verbose_name='W')
 	notes = models.TextField(blank=True, null=True)
 	recommended = models.BooleanField(default=False, verbose_name='+')
+	great = models.BooleanField(default=False, verbose_name='G')
 
 	def __unicode__(self):
 		return "%s - %s " % (self.movie.title, self.date)
@@ -104,6 +105,15 @@ class Entry(models.Model):
 	class Meta:
 		ordering = ('pk',)
 		verbose_name_plural = 'entries'
+
+	def save(self, *args, **kwargs):
+		if self.great:
+			self.recommended = True
+		if self.walkout or not self.recommended:
+			self.great = False
+		if self.walkout:
+			self.recommended = False
+		return super(Entry, self).save(*args, **kwargs)
 
 	@property
 	def video(self):

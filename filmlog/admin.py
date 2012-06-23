@@ -18,10 +18,10 @@ class MovieAdmin(admin.ModelAdmin):
 
 class EntryAdmin(admin.ModelAdmin):
 	date_hierarchy = 'date'
-	list_display = ('pk', 'date', 'movie', 'venue', 'format', 'recommended', 'in_3d', 'repeat', 'walkout',)
+	list_display = ('pk', 'date', 'movie', 'venue', 'format', 'great', 'recommended', 'in_3d', 'repeat', 'walkout',)
 	list_display_links = ('pk',)
-	list_editable = ('movie', 'venue', 'format', 'recommended', 'in_3d', 'repeat', 'walkout',)
-	list_filter = ('venue__city', 'venue__state', 'venue', 'format', 'in_3d', 'repeat', 'walkout', 'movie__premiere_year', 'movie__nyc_release_year',)
+	list_editable = ('movie', 'venue', 'format', 'great', 'recommended', 'in_3d', 'repeat', 'walkout',)
+	list_filter = ('venue__city', 'venue__state', 'venue', 'format', 'great', 'recommended', 'in_3d', 'repeat', 'walkout', 'movie__premiere_year', 'movie__nyc_release_year',)
 	ordering = ('-id',)
 	raw_id_fields = ('movie',)
 	search_fields = ['venue__name', 'movie__title_sans_article', 'movie__imdb',]
