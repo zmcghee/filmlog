@@ -73,11 +73,15 @@ class Venue(models.Model):
 	class Meta:
 		ordering = ('name',)
 
+def entry_ids_for_year_no_walkouts(year):
+	qs = Entry.objects.filter(date__year=year, walkout=False)
+	return list(qs.values_list('id', flat=True))
+
 def find_index_for_entry(year, obj):
 	if obj.walkout:
 		return None
-	qs = Entry.objects.filter(date__year=year, walkout=False)
-	return list(qs.values_list('id', flat=True)).index(obj.id) + 1
+	entries = entry_ids_for_year_no_walkouts(year)
+	return entries.index(obj.id) + 1
 
 def only_walkouts_prior_to_entry(obj):
 	if obj.repeat:
