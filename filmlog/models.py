@@ -130,3 +130,21 @@ class Entry(models.Model):
 	@property
 	def reverse_slashes(self):
 		return only_walkouts_prior_to_entry(self)
+
+	@property
+	def special_format(self):
+		flag = ''
+		if not self.video:
+			if self.format == '0':
+				flag = '35mm'
+			elif self.format == 'L':
+				flag = 'Digital IMAX'
+			elif self.format == 'I':
+				flag = '70mm IMAX'
+			elif self.format == 'S':
+				flag = '70mm'
+			else:
+				flag = 'Digital'
+			if self.in_3d:
+				flag += ' 3-D'
+		return flag.strip()
