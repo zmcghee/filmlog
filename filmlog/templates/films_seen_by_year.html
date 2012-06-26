@@ -1,4 +1,4 @@
-<html>
+{% load iterator %}<html>
 <head><title>Films I Saw in {{ year }}</title></head>
 
 <body bgcolor="#FFFFFF" text="#000000" link="#010FFF">
@@ -28,5 +28,5 @@ mechanical failure, medical emergency, airplane landing, etc.<p></font>
 <center><a href="#lastfive">Jump to the last five.</a></center>
 <pre><font color=black>
 {% for entry in entries %}
-<hr>{% if entry.walkout %}W/O{% else %}{% if entry.count < 10 %}00{% else %}{% if entry.count < 100 %}0{% endif %}{% endif %}{{ entry.count }}{% endif %}. ({{ entry.date|date:"d M" }})  {% if entry.repeat %}{% if entry.reverse_slashes %}\{% else %}/{% endif %}{% endif %}{{ entry.movie.title }}{% if entry.repeat %}{% if entry.reverse_slashes %}\{% else %}/{% endif %}{% endif %} ({{ entry.movie.premiere_year }}, {{ entry.movie.directors_as_str }}){% if entry.video %}*{% endif %}{% if entry.special_format %} [{{ entry.special_format }}]{% endif %}{% endfor %}
+<hr>{% if entry.walkout %}W/O{% else %}{% filter zeroes:3 %}{% iterator 0 %}{% endfilter %}{% endif %}. ({{ entry.date|date:"d M" }})  {% if entry.repeat %}{% if entry.reverse_slashes %}\{% else %}/{% endif %}{% endif %}{{ entry.movie.title }}{% if entry.repeat %}{% if entry.reverse_slashes %}\{% else %}/{% endif %}{% endif %} ({{ entry.movie.premiere_year }}, {{ entry.movie.directors_as_str }}){% if entry.video %}*{% endif %}{% if entry.special_format %} [{{ entry.special_format }}]{% endif %}{% endfor %}
 <hr><a name=lastFive></a>

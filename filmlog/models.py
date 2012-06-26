@@ -73,16 +73,6 @@ class Venue(models.Model):
 	class Meta:
 		ordering = ('name',)
 
-def entry_ids_for_year_no_walkouts(year):
-	qs = Entry.objects.filter(date__year=year, walkout=False)
-	return list(qs.values_list('id', flat=True))
-
-def find_index_for_entry(year, obj):
-	if obj.walkout:
-		return None
-	entries = entry_ids_for_year_no_walkouts(year)
-	return entries.index(obj.id) + 1
-
 def only_walkouts_prior_to_entry(obj):
 	if obj.repeat:
 		qs = Entry.objects.filter(movie=obj.movie, date__lte=obj.date).exclude(id=obj.id)
@@ -122,10 +112,6 @@ class Entry(models.Model):
 	@property
 	def video(self):
 		return not self.venue or not self.venue.city
-
-	@property
-	def count(self):
-		return find_index_for_entry(self.date.year, self)
 
 	@property
 	def reverse_slashes(self):
