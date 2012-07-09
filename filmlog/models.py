@@ -75,11 +75,18 @@ class Venue(models.Model):
 
 def only_walkouts_prior_to_entry(obj):
 	if obj.repeat:
+		if obj.movie.pk not in Entry.objects.walkout_list:
+			return False
 		qs = Entry.objects.filter(movie=obj.movie, date__lte=obj.date).exclude(id=obj.id)
 		if qs.count() > 0:
 			if qs.filter(walkout=True).count() == qs.count():
 				return True
 	return False
+
+class EntryManager(models.Manager):
+	@property
+	def walkout_list(self):
+		return self.get_query_set().filter(walkout=True).values_list('movie', flat=True)
 
 class Entry(models.Model):
 	movie = models.ForeignKey(Movie, related_name='entries')
@@ -93,6 +100,8 @@ class Entry(models.Model):
 	recommended = models.BooleanField(default=False, verbose_name='+')
 	great = models.BooleanField(default=False, verbose_name='G')
 	version = models.CharField(max_length=50, null=True, blank=True)
+
+	objects = EntryManager()
 
 	def __unicode__(self):
 		return "%s - %s " % (self.movie.title, self.date)
