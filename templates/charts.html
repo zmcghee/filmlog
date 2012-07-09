@@ -1,0 +1,197 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set callbacks to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(function(){
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Type');
+        data.addColumn('number', 'Screenings');
+        data.addRows([
+		  ['First-time viewings', {{ first_timers }}],
+		  ['Repeat viewings', {{ repeats }}],
+		  ['Walkouts', {{ walkouts }}]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Overview',
+                       'width':900,
+                       'height':350};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('entry_overview'));
+        chart.draw(data, options);
+      });
+      
+
+
+
+
+
+
+
+      google.setOnLoadCallback(function(){
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Theater');
+        data.addColumn('number', 'Screenings');
+        data.addRows([
+{% for venue in venues.all %}
+{% if venue.total > 0 %}
+		  ['{{ venue.name|addslashes }}', {{ venue.total }}]{% if not forloop.last %},{% endif %}
+{% endif %}
+{% endfor %}
+        ]);
+
+        // Set chart options
+        var options = {'title':'Theatrical Venues (with Alamo grouped)',
+                       'width':900,
+                       'height':600};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('venue_chart_div'));
+        chart.draw(data, options);
+      });
+      
+
+
+
+
+
+
+
+      google.setOnLoadCallback(function(){
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Theater');
+        data.addColumn('number', 'Screenings');
+        data.addRows([
+{% for venue in venues.alamo %}
+{% if venue.total > 0 %}
+		  ['{{ venue.name|addslashes }}', {{ venue.total }}]{% if not forloop.last %},{% endif %}
+{% endif %}
+{% endfor %}
+        ]);
+
+        // Set chart options
+        var options = {'title':'Alamo-only venue breakout',
+                       'width':900,
+                       'height':350};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('alamo_chart_div'));
+        chart.draw(data, options);
+      });
+      
+
+
+
+
+
+
+
+      google.setOnLoadCallback(function(){
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Dates');
+        data.addColumn('number', 'Screenings');
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addRows([
+{% for date in dates %}
+          [(function(){ d='{{ date.date }}'.split('-');return new Date(d[0], d[1]-1, d[2]); }()),  {{ date.total }},
+
+{% if date.date == '2012-4-29' %}'Moved to Austin'
+{% elif date.date == '2012-3-9' %}'SXSW 2012 starts'
+{% elif date.date == '2012-3-17' %}'SXSW 2012 ends'
+{% else %}''{% endif %}]{% if not forloop.last %},{% endif %}
+{% endfor %}
+        ]);
+
+        var options = {
+          title: 'Seen by date',
+          legend: {position:'none'}
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('entries_by_date'));
+        chart.draw(data, options);
+      });
+      
+
+
+
+
+
+
+
+      google.setOnLoadCallback(function(){
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Rating');
+        data.addColumn('number', 'Screenings');
+        data.addRows([
+		  ['Thumbs Up', {{ thumb.all.up }}],
+		  ['Thumbs Down', {{ thumb.all.down }}]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Review (includes repeats & walkouts)',
+                       'width':900,
+                       'height':350};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('thumb_all'));
+        chart.draw(data, options);
+      });
+      
+
+
+
+
+
+
+
+      google.setOnLoadCallback(function(){
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Rating');
+        data.addColumn('number', 'Screenings');
+        data.addRows([
+		  ['Thumbs Up', {{ thumb.first_timers.up }}],
+		  ['Thumbs Down', {{ thumb.first_timers.down }}]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Review (excludes repeats & walkouts)',
+                       'width':900,
+                       'height':350};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('thumb_first_timers'));
+        chart.draw(data, options);
+      });
+    </script>
+  </head>
+
+  <body>
+    <!--Div that will hold the pie chart-->
+    <div id="entry_overview"></div>
+    <div id="venue_chart_div"></div>
+    <div id="alamo_chart_div"></div>
+    <div id="thumb_first_timers"></div>
+    <div id="thumb_all"></div>
+    <div id="entries_by_date"></div>
+    Total: {{ total_seen }}<br>
+    3D: {{ in_3d }}
+  </body>
+</html>
