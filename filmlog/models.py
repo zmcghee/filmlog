@@ -92,6 +92,7 @@ class Entry(models.Model):
 	notes = models.TextField(blank=True, null=True)
 	recommended = models.BooleanField(default=False, verbose_name='+')
 	great = models.BooleanField(default=False, verbose_name='G')
+	version = models.CharField(max_length=50, null=True, blank=True)
 
 	def __unicode__(self):
 		return "%s - %s " % (self.movie.title, self.date)
