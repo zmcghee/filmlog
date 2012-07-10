@@ -23,17 +23,6 @@ class Movie(models.Model):
 	nyc_release_year = models.CharField(max_length=4, null=True, blank=True)
 	directors = models.ManyToManyField(Director, related_name='movies')
 
-	@property
-	def directors_as_str(self):
-		directors = self.directors.all()
-		if directors.count() == 0:
-			return ''
-		if directors.count() == 1:
-			return directors[0].name
-		all = list(directors.values_list('name', flat=True))
-		last = all.pop(-1)
-		return "%s & %s" % (", ".join(all), last)
-
 	def set_title(self, complete_title):
 		articles = ("A", "AN", "THE", "EL", "LA", "LE", "IL", "L'")
 		try:
@@ -59,6 +48,41 @@ class Movie(models.Model):
 
 	class Meta:
 		ordering = ('title_sans_article', 'leading_article', 'premiere_year',)
+
+	@property
+	def directors_as_str(self):
+		directors = self.directors.all()
+		if directors.count() == 0:
+			return ''
+		if directors.count() == 1:
+			return directors[0].name
+		all = list(directors.values_list('name', flat=True))
+		last = all.pop(-1)
+		return "%s & %s" % (", ".join(all), last)
+
+	@property
+	def versions(self):
+		return self.entries.values_list('version', flat=True)
+
+	@property
+	def seen(self):
+		if self.entries.exclude(walkout=True).count() > 0:
+			return True
+		return False
+
+	@property
+	def last_seen(self):
+		if self.seen:
+			return self.entries.order_by('-pk')[0]
+		return None
+
+	@property
+	def recommended(self):
+		return self.last_seen.recommended
+
+	@property
+	def great(self):
+		return self.last_seen.great
 
 class Venue(models.Model):
 	name = models.CharField(max_length=100)
