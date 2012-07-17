@@ -73,7 +73,7 @@ class Movie(models.Model):
 	@property
 	def last_seen(self):
 		if self.seen:
-			return self.entries.order_by('-pk')[0]
+			return self.entries.filter(walkout=False).order_by('-pk')[0]
 		return None
 
 	@property
