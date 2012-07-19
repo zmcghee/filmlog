@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
+	<meta id="viewport" name="viewport" content="initial-scale=1.0;minimum-scale=1.0; maximum-scale=1.0" />
 	<title>{% if year < 2011 %}Some {% endif %}Films Seen in {{ year }}</title>
 	<script>
 	function imdb_ok()
@@ -30,6 +31,25 @@
 			font-size: x-small;
 			voice-family: "\"}\"";
 			font-size: small;
+		}
+		
+		@media only screen and (max-device-width: 480px) {
+			th.count, td.count {
+				display:none;
+			}
+			th {
+				padding-left:0 !important;
+				padding-right:0 !important;
+			}
+			td.movie .m2 {
+				padding-left: .7em !important;
+			}
+			tr.repeat td.movie .m2 {
+				padding-left: 50px !important;
+			}
+			tr.video td.movie .m2 {
+				padding-right: 50px !important;
+			}
 		}
 		
 		html>body {
@@ -177,7 +197,7 @@
 		
 		tr.video td.movie .m2 {
 			background: url('http://static.zmcghee.com/movies/vhs.png') bottom right no-repeat;
-			padding-right: 80px !important;
+			padding-right: 80px;
 		}
 
 	</style>
@@ -212,7 +232,7 @@
 				<td class="movie">
 					<div class="m1"><div class="m2">
 						<span class="movie-title">
-							{% if entry.movie.imdb %}<a href="http://www.imdb.com/title/tt{{ entry.movie.imdb }}/" onclick="return imdb_ok();">{% endif %}{{ entry.movie.title }}{% if entry.movie.imdb %}</a>{% endif %}
+							{% if entry.movie.imdb %}<a href="http://www.imdb.com/title/tt{{ entry.movie.imdb|zeroes:7 }}/" onclick="return imdb_ok();">{% endif %}{{ entry.movie.title }}{% if entry.movie.imdb %}</a>{% endif %}
 						</span>
 	{% if entry.version %}
 						<span class="version"> [{{ entry.version }}]</span>
