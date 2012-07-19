@@ -28,9 +28,8 @@
 			color: #333;
 			background-color: #fff;
 			font-family: "Helvetica Neue", Helvetica, sans-serif;
-			font-size: x-small;
-			voice-family: "\"}\"";
 			font-size: small;
+			voice-family: "\"}\"";
 		}
 		
 		@media only screen and (max-device-width: 480px) {
@@ -41,14 +40,39 @@
 				padding-left:0 !important;
 				padding-right:0 !important;
 			}
+			td {
+				font-size:x-small !important;
+			}
+			td.movie .m1, tr.video td.movie .m2 {
+				background-image:none !important;
+			}
 			td.movie .m2 {
 				padding-left: .7em !important;
 			}
-			tr.repeat td.movie .m2 {
-				padding-left: 50px !important;
+			tr.repeat td.movie .movie-title:before,
+			tr.repeat td.movie .movie-title:after {
+				content:"/";
+				font-weight:normal;
+			}
+			tr.reverse-repeat td.movie .movie-title:before,
+			tr.reverse-repeat td.movie .movie-title:after {
+				content:"\\";
+				font-weight:normal;
 			}
 			tr.video td.movie .m2 {
-				padding-right: 50px !important;
+				padding-right:.7em !important;
+			}
+			tr.video td.movie .movie-title:after {
+				content:"*";
+				font-weight:normal;
+			}
+			tr.video.repeat td.movie .movie-title:after {
+				content:"/*";
+				font-weight:normal;
+			}
+			tr.video.reverse-repeat td.movie .movie-title:after {
+				content:"\\*";
+				font-weight:normal;
 			}
 		}
 		
@@ -231,9 +255,7 @@
 				</td>
 				<td class="movie">
 					<div class="m1"><div class="m2">
-						<span class="movie-title">
-							{% if entry.movie.imdb %}<a href="http://www.imdb.com/title/tt{{ entry.movie.imdb|zeroes:7 }}/" onclick="return imdb_ok();">{% endif %}{{ entry.movie.title }}{% if entry.movie.imdb %}</a>{% endif %}
-						</span>
+						<span class="movie-title">{% if entry.movie.imdb %}<a href="http://www.imdb.com/title/tt{{ entry.movie.imdb|zeroes:7 }}/" onclick="return imdb_ok();">{% endif %}{{ entry.movie.title }}{% if entry.movie.imdb %}</a>{% endif %}</span>
 	{% if entry.version %}
 						<span class="version"> [{{ entry.version }}]</span>
 	{% endif %}
