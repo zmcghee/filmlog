@@ -5,6 +5,12 @@ from django.shortcuts import render
 
 from filmlog.models import Entry, Venue
 
+def entry_years():
+	from django.db import connection, transaction
+	cursor = connection.cursor()
+	cursor.execute("SELECT DISTINCT STRFTIME('%%Y', date) AS year FROM filmlog_entry;")
+	return [int(row[0]) for row in cursor.fetchall()]
+
 def films_seen_by_year(request, year=None):
 	try:
 		year = int(year)
@@ -12,11 +18,24 @@ def films_seen_by_year(request, year=None):
 			raise Http404
 	except TypeError:
 		year = datetime.datetime.today().year
-	entries = Entry.objects.filter(date__year=year).order_by('pk')
+	entries = Entry.objects.filter(date__year=year)
+	total = entries.filter(walkout=False).count()
+	order_by = request.GET.get('order', None)
+	if order_by == 'date':
+		entries = entries.order_by('pk')
+	elif order_by == 'title':
+		entries = entries.order_by('movie__title_sans_article')
+	elif order_by == 'rating':
+		entries = entries.order_by('walkout', '-recommended', 'movie__title_sans_article', 'pk')
+	else:
+		entries = entries.order_by('-pk')
+		order_by = 'reverse'
 	context = {'entries': entries,
 			   'imax': ['I', 'L'],
 			   'year': year,
-			   'total': range(0,10)
+			   'total': total,
+			   'order_by': order_by,
+			   'years': entry_years()
 			  }
 	return render(request, 'films_seen_by_year.html', context)
 

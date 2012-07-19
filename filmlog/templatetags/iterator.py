@@ -11,10 +11,18 @@ def zeroes(value, arg):
 
 class IteratorNode(Node):
     def __init__(self, var):
-        self.var = int(var)
+        try:
+        	self.var = int(var)
+        except ValueError:
+        	self.var = -1
 
     def render(self, context):
-        self.var = self.var + 1
+        if context['order_by'] == 'reverse':
+        	if self.var < 0:
+        		self.var = context['total'] + 1
+        	self.var = self.var - 1
+        else:
+        	self.var = self.var + 1
         return u'%s' % self.var
 
 @register.tag

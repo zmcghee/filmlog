@@ -1,32 +1,242 @@
-{% load iterator %}<html>
-<head><title>Films I Saw in {{ year }}</title></head>
+{% load iterator %}{% spaceless %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>{% if year < 2011 %}Some {% endif %}Films Seen in {{ year }}</title>
+	<script>
+	function imdb_ok()
+	{
+		if (window.localStorage)
+		{
+			user_pref = window.localStorage.getItem("external_link_ok");
+			if(user_pref) return true;
+		}
+		if(confirm("You're about to head over to IMDb. Is that cool?"))
+		{
+			window.localStorage.setItem("external_link_ok", true);
+			return true;
+		}
+		return false;
+	}
+	</script>
+	<style type="text/css">
+		body {
+			margin: 0;
+			padding: 0;
+			color: #333;
+			background-color: #fff;
+			font-family: "Helvetica Neue", Helvetica, sans-serif;
+			font-size: x-small;
+			voice-family: "\"}\"";
+			font-size: small;
+		}
+		
+		html>body {
+			font-size: small;
+		}
+		
+		h1, #f {
+			background: #369;
+			color: #fff;
+		}
+		
+		h1 {
+			margin: 0;
+			font-size: xx-large;
+			background: rgb(122,188,255); /* Old browsers */
+			background: -moz-linear-gradient(top,  rgba(122,188,255,1) 0%, rgba(96,171,248,1) 44%, rgba(64,150,238,1) 100%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(122,188,255,1)), color-stop(44%,rgba(96,171,248,1)), color-stop(100%,rgba(64,150,238,1))); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(top,  rgba(122,188,255,1) 0%,rgba(96,171,248,1) 44%,rgba(64,150,238,1) 100%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(top,  rgba(122,188,255,1) 0%,rgba(96,171,248,1) 44%,rgba(64,150,238,1) 100%); /* Opera 11.10+ */
+			background: -ms-linear-gradient(top,  rgba(122,188,255,1) 0%,rgba(96,171,248,1) 44%,rgba(64,150,238,1) 100%); /* IE10+ */
+			background: linear-gradient(to bottom,  rgba(122,188,255,1) 0%,rgba(96,171,248,1) 44%,rgba(64,150,238,1) 100%); /* W3C */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7abcff', endColorstr='#4096ee',GradientType=0 ); /* IE6-9 */
+		}
+		
+		h1, #f, #c {
+			padding: 2%;
+		}
+		
+		#f {
+			padding-top: 7px;
+			padding-bottom: 7px;
+		}
+		
+		#f a {
+			color:#fff;
+		}
+		
+		#log {
+			max-width: 550px;
+		}
+		
+		table {
+			width: 100%;
+		}
+		
+		.count div {
+			-webkit-transform: rotate(-90deg);
+			-moz-transform: rotate(-90deg);
+			-ms-transform: rotate(-90deg);
+			-o-transform: rotate(-90deg);
+			filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+		}
+		
+		.count, .date, .rating {
+			text-align: center;
+		}
+		
+		.movie-title {
+			font-size: medium;
+			font-weight: bold;
+		}
+		
+		.premiere-year {
+			font-size: x-small;
+			color: #333 !important;
+		}
+		
+		.version {
+			font-style: italic;
+		}
+		
+		.directors {
+			display: block;
+		}
+		
+		th, td, td.movie .m2 {
+			padding: .7em;
+		}
+		
+		td.movie .m2 {
+			padding-left: 50px;
+		}
+		
+		th, td {
+			border-bottom: 1px solid #ccc;
+		}
+		
+		th, th a {
+			color: #000;
+		}
+		
+		td {
+			border-right: 1px solid #aaa;
+		}
+		
+		.rating {
+			border-right: 0;
+		}
+		
+		th {
+			font-size: 1.1em;
+		}
+		
+		tr.odd {
+			background: #ffe;
+		}
+		
+		tr.walkout td .m1, tr.walkout td.date span {
+			-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+			filter: alpha(opacity=50);
+			opacity: .5;
+		}
+		
+		td.date span {
+			display: block;
+		}
+		
+		td.date .month {
+			background: #c00;
+			color: #fff;
+			-moz-border-top-left-radius: 25%;
+			border-top-left-radius: 25%;
+			-moz-border-top-right-radius: 25%;
+			border-top-right-radius: 25%;
+		}
+		
+		td.date .day {
+			font-size: medium;
+			border: 1px solid #eee;
+			background: #fff;
+			-moz-border-bottom-left-radius: 25%;
+			border-bottom-left-radius: 25%;
+			-moz-border-bottom-right-radius: 25%;
+			border-bottom-right-radius: 25%;
+			background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0.21, rgb(247,247,247)), color-stop(1, rgb(255,255,255)) );
+		}
+		
+		td.movie {
+			padding: 0 !important;
+		}
+		
+		tr.repeat td.movie .m1 {
+			background: url('http://static.zmcghee.com/movies/repeat.png') .7em center no-repeat;
+		}
+		
+		tr.video td.movie .m2 {
+			background: url('http://static.zmcghee.com/movies/vhs.png') bottom right no-repeat;
+			padding-right: 80px !important;
+		}
 
-<body bgcolor="#FFFFFF" text="#000000" link="#010FFF">
-
-{% if year == 2010 %}
-<b><i>Obviously this year's log is incomplete. I didn't start regularly keeping a log of what I watch until 6 Nov 2010. Sorry.</i></b><p>
-{% endif %}
-
-<font color=purple size=-4 face=Times>
-
-Movies seen in formats like 35mm, 70mm, IMAX, and 3-D (or any combination thereof) are noted as such in brackets at the end of applicable entries.<p>
-
-"*" after a film title indicates that I saw it on some form of home 
-video.<p>
-
-Right-leaning slashes /surrounding/ a film indicate that I had seen the 
-film previously in its entirety. Left-leaning slashes \surrounding\ a 
-film indicate that I had previously seen (roughly) the film's first two reels.<p>
-
-An entry beginning with "W/O" in lieu of a numeral indicates that I 
-walked out at the end of the second reel (or, in the case of a film 
-watched on home video, that I stopped the tape or DVD at the 40-minute 
-mark). This doesn't necessarily mean that I despised the film, but I at least felt there was no compelling reason to stick around. It's also possible I was 
-unable to finish watching the film for reasons beyond my control, e.g. 
-mechanical failure, medical emergency, airplane landing, etc.<p></font>
-
-<center><a href="#lastfive">Jump to the last five.</a></center>
-<pre><font color=black>
+	</style>
+</head>
+<body>
+<h1>{% if year < 2011 %}Some {% endif %}Films Seen in {{ year }}</h1>
+<form action="#" id="f">An {% if year < 2011 %}incomplete {% endif %}interactive list and data visualization of movies seen in 
+<select onchange="location.href='/movies/'+this.value+location.search">
+{% for option in years %}
+<option{% if option == year %} selected{% endif %}>{{ option }}</option>
+{% endfor %}
+</select> by <a href="http://zmcghee.com/">Zack McGhee</a>.</form>
+<div id="c">
+<div id="log">
+	<table cellpadding="0" cellspacing="0">
+		<thead>
+			<tr>
+				<th class="count"><!-- Count --></th>
+				<th class="date"><a href="/movies/{{ year }}{% if order_by == 'reverse' %}?order=date{% endif %}">Date</a></th>
+				<th class="movie">{% if order_by != 'title' %}<a href="/movies/{{ year }}?order=title">{% endif %}Movie{% if order_by != 'title' %}</a>{% endif %}</th>
+				<th class="rating">{% if order_by != 'rating' %}<a href="/movies/{{ year }}?order=rating">{% endif %}Rating{% if order_by != 'rating' %}</a>{% endif %}</th>
+			</tr>
+		</thead>
+		<tbody>
 {% for entry in entries %}
-<hr>{% if entry.walkout %}W/O{% else %}{% filter zeroes:3 %}{% iterator 0 %}{% endfilter %}{% endif %}. ({{ entry.date|date:"d M" }})  {% if entry.repeat %}{% if entry.reverse_slashes %}\{% else %}/{% endif %}{% endif %}{{ entry.movie.title }}{% if entry.repeat %}{% if entry.reverse_slashes %}\{% else %}/{% endif %}{% endif %} ({{ entry.movie.premiere_year }}, {{ entry.movie.directors_as_str }}){% if entry.video %}*{% endif %}{% if entry.special_format %} [{{ entry.special_format }}]{% endif %}{% endfor %}
-<hr><a name=lastFive></a>
+			<tr class="{% cycle 'odd' 'even' %}{% if entry.video %} video{% endif %}{% if entry.walkout %} walkout{% endif %}{% if entry.repeat %} {% if entry.reverse_slashes %}reverse-{% endif %}repeat{% endif %}">
+				<td class="count">{% if not entry.walkout %}<div>{% if order_by == 'reverse' %}{% iterator reverse %}{% else %}{% iterator 0 %}{% endif %}.</div>{% endif %}</td>
+				<td class="date">
+					<span class="month">{{ entry.date|date:"M" }} </span>
+					<span class="day">{{ entry.date|date:"d" }}</span>
+				</td>
+				<td class="movie">
+					<div class="m1"><div class="m2">
+						<span class="movie-title">
+							{% if entry.movie.imdb %}<a href="http://www.imdb.com/title/tt{{ entry.movie.imdb }}/" onclick="return imdb_ok();">{% endif %}{{ entry.movie.title }}{% if entry.movie.imdb %}</a>{% endif %}
+						</span>
+	{% if entry.version %}
+						<span class="version"> [{{ entry.version }}]</span>
+	{% endif %}
+						<span class="premiere-year"> {{ entry.movie.premiere_year }}</span>
+	{% if entry.movie.directors_as_str %}
+						<span class="directors">Directed by {{ entry.movie.directors_as_str }}</span>
+	{% endif %}
+					</div></div>
+				</td>
+				<td class="rating">
+{% if entry.recommended and not entry.walkout %}
+					<img src="http://static.zmcghee.com/movies/thumb_up.png" alt="Thumb Up" />
+{% elif not entry.walkout %}
+					<img src="http://static.zmcghee.com/movies/thumb_down.png" alt="Thumb Down" />
+{% endif %}
+				</td>
+			</tr>
+{% endfor %}
+		</tbody>
+	</table>
+<p><a href="http://findicons.com/icon/164547/control_repeat?id=166475">Repeat icon</a> by <a href="http://www.fatcow.com/">FatCow Web Hosting</a>. <a href="http://findicons.com/icon/207175/generic_vhs">Video icon</a> by Steven W. Smith. Yes, that is my thumb.</p>
+</div>
+</div>
+</body>
+</html>
+{% endspaceless %}
