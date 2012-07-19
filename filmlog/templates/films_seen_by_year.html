@@ -5,22 +5,7 @@
 	<meta charset="utf-8" />
 	<meta id="viewport" name="viewport" content="initial-scale=1.0;minimum-scale=1.0; maximum-scale=1.0" />
 	<title>{% if year < 2011 %}Some {% endif %}Films Seen in {{ year }}</title>
-	<script>
-	function imdb_ok()
-	{
-		if (window.localStorage)
-		{
-			user_pref = window.localStorage.getItem("external_link_ok");
-			if(user_pref) return true;
-		}
-		if(confirm("You're about to head over to IMDb. Is that cool?"))
-		{
-			window.localStorage.setItem("external_link_ok", true);
-			return true;
-		}
-		return false;
-	}
-	</script>
+	<script>function imdb_ok(){a=true;if(b=window.localStorage){c=b.getItem("imdb_ok");if(c)return a}if(confirm("You're about to head over to IMDb. Is that cool?")){b.setItem("imdb_ok",a);return a}return false}</script>
 	<style type="text/css">
 		body {
 			margin: 0;
