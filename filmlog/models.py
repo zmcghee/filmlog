@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import connection, models, transaction
 
 # Most of these are pretty clear. DCP is inclusive of any digital format presented at a DCP-capable venue (since usually they're upconverting even if the source material is HDCAM or Blu-ray). Broadcast/VOD basically just means anything I've watched on TV via my cable provider.
 FORMATS = (('0', '35mm'), ('1', 'DCP'), ('2', 'Blu-ray'), ('3', 'DVD'),
@@ -111,6 +111,12 @@ class EntryManager(models.Manager):
 	@property
 	def walkout_list(self):
 		return self.get_query_set().filter(walkout=True).values_list('movie', flat=True)
+
+	@property
+	def year_list(self):
+		cursor = connection.cursor()
+		cursor.execute("SELECT DISTINCT STRFTIME('%%Y', date) AS year FROM filmlog_entry;")
+		return [int(row[0]) for row in cursor.fetchall()]
 
 class Entry(models.Model):
 	movie = models.ForeignKey(Movie, related_name='entries')

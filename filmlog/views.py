@@ -5,12 +5,6 @@ from django.shortcuts import render
 
 from filmlog.models import Entry, Venue
 
-def entry_years():
-	from django.db import connection, transaction
-	cursor = connection.cursor()
-	cursor.execute("SELECT DISTINCT STRFTIME('%%Y', date) AS year FROM filmlog_entry;")
-	return [int(row[0]) for row in cursor.fetchall()]
-
 def films_seen_by_year(request, year=None):
 	try:
 		year = int(year)
@@ -35,7 +29,7 @@ def films_seen_by_year(request, year=None):
 			   'year': year,
 			   'total': total,
 			   'order_by': order_by,
-			   'years': entry_years()
+			   'years': Entry.objects.year_list
 			  }
 	return render(request, 'films_seen_by_year.html', context)
 
