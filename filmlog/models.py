@@ -99,16 +99,6 @@ class Venue(models.Model):
 	class Meta:
 		ordering = ('name',)
 
-def only_walkouts_prior_to_entry(obj):
-	if obj.repeat:
-		if obj.movie.pk not in Entry.objects.walkout_list:
-			return False
-		qs = Entry.objects.filter(movie=obj.movie, date__lte=obj.date).exclude(id=obj.id)
-		if qs.count() > 0:
-			if qs.filter(walkout=True).count() == qs.count():
-				return True
-	return False
-
 class Entry(models.Model):
 	movie = models.ForeignKey(Movie, related_name='entries')
 	date = models.DateField()
@@ -143,10 +133,6 @@ class Entry(models.Model):
 	@property
 	def video(self):
 		return not self.venue or not self.venue.city
-
-	@property
-	def reverse_slashes(self):
-		return only_walkouts_prior_to_entry(self)
 
 	@property
 	def special_format(self):

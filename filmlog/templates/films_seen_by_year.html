@@ -39,11 +39,6 @@ body {
 		content:"/";
 		font-weight:normal;
 	}
-	tr.reverse-repeat td.movie .movie-title:before,
-	tr.reverse-repeat td.movie .movie-title:after {
-		content:"\\";
-		font-weight:normal;
-	}
 	tr.video td.movie .m2 {
 		padding-right:.7em !important;
 	}
@@ -53,10 +48,6 @@ body {
 	}
 	tr.video.repeat td.movie .movie-title:after {
 		content:"/*";
-		font-weight:normal;
-	}
-	tr.video.reverse-repeat td.movie .movie-title:after {
-		content:"\\*";
 		font-weight:normal;
 	}
 }
@@ -231,7 +222,7 @@ tr.video td.movie .m2 {
 		</thead>
 		<tbody>
 {% for entry in entries %}
-			<tr class="{% cycle 'odd' 'even' %}{% if entry.video %} video{% endif %}{% if entry.walkout %} walkout{% endif %}{% if entry.repeat %} {% if entry.reverse_slashes %}reverse-{% endif %}repeat{% endif %}">
+			<tr class="{% cycle 'odd' 'even' %}{% if entry.video %} video{% endif %}{% if entry.walkout %} walkout{% endif %}{% if entry.repeat %} repeat{% endif %}">
 				<td class="count">{% if not entry.walkout %}<div>{% if order_by == 'reverse' %}{% iterator reverse %}{% else %}{% iterator 0 %}{% endif %}.</div>{% endif %}</td>
 				<td class="date">
 					<span class="month">{{ entry.date|date:"M" }} </span>
