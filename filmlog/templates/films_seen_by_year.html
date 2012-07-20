@@ -235,8 +235,8 @@ tr.video td.movie .m2 {
 						<span class="version"> [{{ entry.version }}]</span>
 	{% endif %}
 						<span class="premiere-year"> {{ entry.movie.premiere_year }}</span>
-	{% if entry.movie.directors_as_str %}
-						<span class="directors">Directed by {{ entry.movie.directors_as_str }}</span>
+	{% if entry.movie.directors %}
+						<span class="directors">Directed by {% for director in entry.movie.directors.all %}{% if entry.movie.directors|length > 1 %}{% if not forloop.first %}{% if not forloop.last %},{% else %} &{% endif %} {% endif %}{% endif %}{% if director.imdb %}<a href="http://www.imdb.com/name/nm{{ director.imdb|zeroes:7 }}/" onclick="return imdb_ok();">{% endif %}{{ director }}{% if director.imdb %}</a>{% endif %}{% endfor %}</span>
 	{% endif %}
 					</div></div>
 				</td>

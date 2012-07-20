@@ -52,17 +52,6 @@ class Movie(models.Model):
 		ordering = ('title_sans_article', 'leading_article', 'premiere_year',)
 
 	@property
-	def directors_as_str(self):
-		directors = self.directors.all()
-		if directors.count() == 0:
-			return ''
-		if directors.count() == 1:
-			return directors[0].name
-		all = list(directors.values_list('name', flat=True))
-		last = all.pop(-1)
-		return "%s & %s" % (", ".join(all), last)
-
-	@property
 	def versions(self):
 		return self.entries.values_list('version', flat=True)
 
