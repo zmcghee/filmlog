@@ -132,7 +132,7 @@ class EntryManager(models.Manager):
 			last_year = int(row.year)
 		return years
 
-class VenueManager(models.Manager):
+class VenueQuerySet(models.query.QuerySet):
 	def theatrical(self, filter_or_exclude):
 		try:
 			assert type(filter_or_exclude) == bool
@@ -140,9 +140,9 @@ class VenueManager(models.Manager):
 			raise TypeError("alamo method expects boolean")
 		theatrical_filter = {'city__exact': ''}
 		if not filter_or_exclude:
-			return self.exclude(**theatrical_filter)
-		return self.filter(**theatrical_filter)
-
+			return self.filter(**theatrical_filter)
+		return self.exclude(**theatrical_filter)
+	
 	def alamo(self, filter_or_exclude):
 		try:
 			assert type(filter_or_exclude) == bool
@@ -152,3 +152,14 @@ class VenueManager(models.Manager):
 		if not filter_or_exclude:
 			return self.exclude(**alamo_filter)
 		return self.filter(**alamo_filter)
+
+class VenueManager(models.Manager):
+	def get_query_set(self):
+		model = models.get_model('filmlog', 'Venue')
+		return VenueQuerySet(model)
+
+	def __getattr__(self, attr, *args):
+		try:
+			return getattr(self.__class__, attr, *args)
+		except AttributeError:
+			return getattr(self.get_query_set(), attr, *args)

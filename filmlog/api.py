@@ -9,7 +9,7 @@ def stats(start_date, end_date):
 		'name': 'Alamo Drafthouse',
 		'total': entries.filter(venue__in=Venue.objects.alamo(True)).count()
 	}]
-	for venue in Venue.objects.alamo(False):
+	for venue in Venue.objects.theatrical(True).alamo(False):
 		all_venues.append({
 			'name': venue.name,
 			'total': venue.entries.between(start_date, end_date).count()
