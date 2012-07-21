@@ -4,10 +4,11 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-	url(r'^movies/(\d{4})', 'filmlog.views.films_seen_by_year'),
-	url(r'^visual/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})/', 'filmlog.views.html'),
-	url(r'^visual/$', 'filmlog.views.html_this_year'),
-	url(r'^api/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})/', 'filmlog.views.json_api'),
-	url(r'^ondeck.html', 'django.views.generic.simple.direct_to_template', {'template': 'ondeck.html'}),
+	url(r'^movies/(\d{4})$', 'filmlog.views.films_seen_by_year'),
+	url(r'^movies/visual/(\d{4})/(\d{2})$', 'filmlog.views.html_month'),
+	url(r'^movies/visual/(\d{4})$', 'filmlog.views.html_year'),
+	url(r'^movies/visual/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})$', 'filmlog.views.html_date_range'),
+	url(r'^movies/api/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})$', 'filmlog.views.json_api'),
+	url(r'^movies/ondeck.html', 'django.views.generic.simple.direct_to_template', {'template': 'ondeck.html'}),
     url(r'^admin/', include(admin.site.urls)),
 )

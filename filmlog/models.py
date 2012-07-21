@@ -1,6 +1,6 @@
 from django.db import models
 
-from filmlog.managers import EntryManager
+from filmlog.managers import EntryManager, VenueManager
 
 # Most of these are pretty clear. DCP is inclusive of any digital format presented at a DCP-capable venue (since usually they're upconverting even if the source material is HDCAM or Blu-ray). Broadcast/VOD basically just means anything I've watched on TV via my cable provider.
 FORMATS = (('0', '35mm'), ('1', 'DCP'), ('2', 'Blu-ray'), ('3', 'DVD'),
@@ -81,6 +81,8 @@ class Venue(models.Model):
 	state = models.CharField(max_length=2, null=True, blank=True)
 	theatrical = models.BooleanField()
 	website = models.URLField(null=True, blank=True)
+
+	objects = VenueManager()
 
 	def __unicode__(self):
 		return self.name

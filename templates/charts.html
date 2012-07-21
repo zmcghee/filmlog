@@ -1,5 +1,6 @@
 <html>
   <head>
+  	<title>{{ title }}</title>
     <!--Load the AJAX API-->
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
@@ -97,7 +98,7 @@
 
 
 
-
+{% if dates %}
 
       google.setOnLoadCallback(function(){
 
@@ -125,7 +126,26 @@
         chart.draw(data, options);
       });
       
+{% else %}
 
+      google.setOnLoadCallback(function() {
+        var data = google.visualization.arrayToDataTable([
+          ['Month', 'Screenings'],
+{% for month in months %}
+          ['{{ month.month_abbr }} {{ month.year }}',  {{ month.total }}],
+{% endfor %}
+        ]);
+
+        var options = {
+          title: 'Movies per Month',
+          legend: {position:'none'}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('entries_by_date'));
+        chart.draw(data, options);
+      });
+
+{% endif %}
 
 
 
@@ -184,13 +204,14 @@
   </head>
 
   <body>
+  	<h1>{{ title }}</h1>
     <!--Div that will hold the pie chart-->
+    <div id="entries_by_date"></div>
     <div id="entry_overview"></div>
     <div id="venue_chart_div"></div>
     <div id="alamo_chart_div"></div>
     <div id="thumb_first_timers"></div>
     <div id="thumb_all"></div>
-    <div id="entries_by_date"></div>
     Total: {{ total_seen }}<br>
     3D: {{ in_3d }}
   </body>
