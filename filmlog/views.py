@@ -36,9 +36,20 @@ def films_seen_by_year(request, year=None):
 			  }
 	return render(request, 'films_seen_by_year.html', context)
 
-def json_api(request, *args):
+def json_date_range(request, *args):
 	context = stats(*args)
-	return HttpResponse(json.dumps(context))
+	return HttpResponse(json.dumps(context), content_type='application/json')
+
+def json_month(request, year, month):
+	start_date = "%s-%s-01" % (year, month)
+	last_day_of_month = monthrange(int(year), int(month))[1]
+	end_date = "%s-%s-%s" % (year, month, last_day_of_month)
+	return json_date_range(request, start_date, end_date)
+
+def json_year(request, year):
+	start_date = "%s-01-01" % year
+	end_date = "%s-12-31" % year
+	return json_date_range(request, start_date, end_date)
 
 def html_date_range(request, *args):
 	context = stats(*args)
