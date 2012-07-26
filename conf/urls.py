@@ -4,6 +4,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+	url(r'^movies/(\d{4})/(\d{2})$', 'filmlog.views.films_seen_by_year'),
 	url(r'^movies/(\d{4})$', 'filmlog.views.films_seen_by_year'),
 	url(r'^movies/visual/(\d{4})/(\d{2})$', 'filmlog.views.html_month'),
 	url(r'^movies/visual/(\d{4})$', 'filmlog.views.html_year'),

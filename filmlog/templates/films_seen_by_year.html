@@ -4,12 +4,13 @@
 <head>
 	<meta charset="utf-8" />
 	<meta id="viewport" name="viewport" content="initial-scale=1.0;minimum-scale=1.0; maximum-scale=1.0" />
-	<title>{% if year < 2011 %}Some {% endif %}Films Seen in {{ year }}</title>
+	<title>{% if year < 2011 %}Some {% endif %}Films Seen in {{ stats.title }}</title>
 	<script>function imdb_ok(){a=true;if(b=window.localStorage){c=b.getItem("imdb_ok");if(c)return a}if(confirm("You're about to head over to IMDb. Is that cool?")){b.setItem("imdb_ok",a);return a}return false}</script>
 	<script type="text/javascript" src="//use.typekit.net/rhb1zic.js"></script>
 	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 <style type="text/css">
 body {
+	min-width:1100px;
 	margin: 0;
 	padding: 0;
 	color: #333;
@@ -17,6 +18,10 @@ body {
 	font-family: "adelle", "palatino", serif;
 	font-size: small;
 	voice-family: "\"}\"";
+}
+
+#c {
+	max-width:1100px;
 }
 
 .mobile {
@@ -29,6 +34,7 @@ body {
 	}
 	body {
 		font-family: "helvetica neue", sans-serif;
+		min-width:100px;
 	}
 	h1 {
 		font-size: 2.6em !important;
@@ -438,12 +444,16 @@ h1 {
     </script>
 </head>
 <body>
-<h1>{% if year < 2011 %}Some {% endif %}Films Seen in {{ year }}</h1>
+<h1>{% if year < 2011 %}Some {% endif %}Films Seen in {{ stats.title }}</h1>
 <form action="#" id="f">An {% if year < 2011 %}incomplete {% endif %}interactive list and data visualization of movies seen in 
 <select onchange="location.href='/movies/'+this.value+location.search">
+{% if stats.dates %}
+{# month by month #}
+{% else %}
 {% for option in years %}
 <option{% if option == year %} selected{% endif %}>{{ option }}</option>
 {% endfor %}
+{% endif %}
 </select> by <a href="http://zmcghee.com/">Zack McGhee</a>.</form>
 <div id="c">
 <div id="stats">
