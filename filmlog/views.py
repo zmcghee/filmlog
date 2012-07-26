@@ -3,10 +3,13 @@ import datetime, json
 from calendar import monthrange
 
 from django.http import Http404, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from filmlog.api import stats
 from filmlog.models import Entry, Venue
+
+def films_seen_this_year(request):
+	return redirect('/movies/%s' % datetime.datetime.today().year)
 
 def films_seen_by_year(request, year=None, month=None):
 	try:
