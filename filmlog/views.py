@@ -27,12 +27,15 @@ def films_seen_by_year(request, year=None):
 	else:
 		entries = entries.order_by('-pk')
 		order_by = 'reverse'
+	start_date = "%s-01-01" % year
+	end_date = "%s-12-31" % year
 	context = {'entries': entries,
 			   'imax': ['I', 'L'],
 			   'year': year,
 			   'total': total,
 			   'order_by': order_by,
-			   'years': Entry.objects.year_list
+			   'years': Entry.objects.year_list,
+			   'stats': stats(start_date, end_date)
 			  }
 	return render(request, 'films_seen_by_year.html', context)
 

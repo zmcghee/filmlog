@@ -6,19 +6,34 @@
 	<meta id="viewport" name="viewport" content="initial-scale=1.0;minimum-scale=1.0; maximum-scale=1.0" />
 	<title>{% if year < 2011 %}Some {% endif %}Films Seen in {{ year }}</title>
 	<script>function imdb_ok(){a=true;if(b=window.localStorage){c=b.getItem("imdb_ok");if(c)return a}if(confirm("You're about to head over to IMDb. Is that cool?")){b.setItem("imdb_ok",a);return a}return false}</script>
+	<script type="text/javascript" src="//use.typekit.net/rhb1zic.js"></script>
+	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 <style type="text/css">
 body {
 	margin: 0;
 	padding: 0;
 	color: #333;
 	background-color: #fff;
-	font-family: "Helvetica Neue", Helvetica, sans-serif;
+	font-family: "adelle", "palatino", serif;
 	font-size: small;
 	voice-family: "\"}\"";
 }
 
+.mobile {
+	display:none;
+}
+
 @media only screen and (max-device-width: 480px) {
-	th.count, td.count {
+	.mobile {
+		display:inline !important;
+	}
+	body {
+		font-family: "helvetica neue", sans-serif;
+	}
+	h1 {
+		font-size: 2.6em !important;
+	}
+	th.count, td.count, #stats {
 		display:none;
 	}
 	th {
@@ -62,8 +77,9 @@ h1, #f {
 }
 
 h1 {
+	font-family: "helvetica neue", sans-serif;
 	margin: 0;
-	font-size: xx-large;
+	font-size: 2.9em;
 	background: rgb(122,188,255); /* Old browsers */
 	background: -moz-linear-gradient(top,  rgba(122,188,255,1) 0%, rgba(96,171,248,1) 44%, rgba(64,150,238,1) 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(122,188,255,1)), color-stop(44%,rgba(96,171,248,1)), color-stop(100%,rgba(64,150,238,1))); /* Chrome,Safari4+ */
@@ -78,7 +94,7 @@ h1, #f, #c {
 	padding: 2%;
 }
 
-#f {
+#f, #stats {
 	padding-top: 7px;
 	padding-bottom: 7px;
 }
@@ -170,6 +186,9 @@ td.date span {
 td.date .month {
 	background: #c00;
 	color: #fff;
+}
+
+td.date .month, #stats #overview li strong {
 	-moz-border-top-left-radius: 25%;
 	border-top-left-radius: 25%;
 	-moz-border-top-right-radius: 25%;
@@ -180,12 +199,16 @@ td.date .day {
 	font-size: medium;
 	border: 1px solid #eee;
 	background: #fff;
+}
+
+td.date .day, #stats #overview li strong {
 	-moz-border-bottom-left-radius: 25%;
 	border-bottom-left-radius: 25%;
 	-moz-border-bottom-right-radius: 25%;
 	border-bottom-right-radius: 25%;
 	background-image: -webkit-gradient( linear, right bottom, right top, color-stop(0.21, rgb(247,247,247)), color-stop(1, rgb(255,255,255)) );
 }
+
 
 td.movie {
 	padding: 0 !important;
@@ -199,7 +222,220 @@ tr.video td.movie .m2 {
 	background: url('http://static.zmcghee.com/movies/vhs.png') bottom right no-repeat;
 	padding-right: 80px;
 }
+#stats {
+	font-size:x-large;
+	float:right;
+	width:480px;
+	border:1px solid #eee;
+	padding-top:1em !important;
+	padding-bottom:1em !important;
+}
+#stats #overview { overflow:auto;overflow:none;padding-left:45px !important;padding-bottom:1em !important; }
+#stats #overview, #stats #overview li { list-style:none;list-style-type:none;margin:0;padding:0; }
+#stats #overview li { display:block;clear:left;padding:.2em 0; }
+#stats #overview li strong, #stats #overview li span { display:block;float:left;padding:1px 5px; }
+#stats #overview li strong { width:2em;text-align:right;background:#369;color:#fff;font-family: "hotel-solid"; }
+#stats #thumb_first_timers, #stats #thumb_all { float:left;width:235px; }
+h1 {
+	background: rgb(122,188,255); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(122,188,255,1) 0%, rgba(96,171,248,1) 44%, rgba(64,150,238,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(122,188,255,1)), color-stop(44%,rgba(96,171,248,1)), color-stop(100%,rgba(64,150,238,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(122,188,255,1) 0%,rgba(96,171,248,1) 44%,rgba(64,150,238,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(122,188,255,1) 0%,rgba(96,171,248,1) 44%,rgba(64,150,238,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(122,188,255,1) 0%,rgba(96,171,248,1) 44%,rgba(64,150,238,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(122,188,255,1) 0%,rgba(96,171,248,1) 44%,rgba(64,150,238,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7abcff', endColorstr='#4096ee',GradientType=0 ); /* IE6-9 */
+}
 </style>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set callbacks to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(function(){
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Type');
+        data.addColumn('number', 'Screenings');
+        data.addRows([
+		  ['First-time viewings', {{ stats.first_timers }}],
+		  ['Repeat viewings', {{ stats.repeats }}],
+		  ['Walkouts', {{ stats.walkouts }}]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Overview'};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('entry_overview'));
+        chart.draw(data, options);
+      });
+      
+
+
+
+
+
+
+
+      google.setOnLoadCallback(function(){
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Theater');
+        data.addColumn('number', 'Screenings');
+        data.addRows([
+{% for venue in stats.venues.all %}
+{% if venue.total > 0 %}
+		  ['{{ venue.name|addslashes }}', {{ venue.total }}]{% if not forloop.last %},{% endif %}
+{% endif %}
+{% endfor %}
+        ]);
+
+        // Set chart options
+        var options = {'title':'Theatrical Venues (with Alamo grouped)'};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('venue_chart_div'));
+        chart.draw(data, options);
+      });
+      
+
+
+
+
+
+
+
+      google.setOnLoadCallback(function(){
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Theater');
+        data.addColumn('number', 'Screenings');
+        data.addRows([
+{% for venue in stats.venues.alamo %}
+{% if venue.total > 0 %}
+		  ['{{ venue.name|addslashes }}', {{ venue.total }}]{% if not forloop.last %},{% endif %}
+{% endif %}
+{% endfor %}
+        ]);
+
+        // Set chart options
+        var options = {'title':'Alamo-only venue breakout'};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('alamo_chart_div'));
+        chart.draw(data, options);
+      });
+      
+
+
+
+
+
+{% if stats.dates %}
+
+      google.setOnLoadCallback(function(){
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Dates');
+        data.addColumn('number', 'Screenings');
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addRows([
+{% for date in stats.dates %}
+          [(function(){ d='{{ date.date }}'.split('-');return new Date(d[0], d[1]-1, d[2]); }()),  {{ date.total }},
+
+{% if date.date == '2012-4-29' %}'Moved to Austin'
+{% elif date.date == '2012-3-9' %}'SXSW 2012 starts'
+{% elif date.date == '2012-3-17' %}'SXSW 2012 ends'
+{% else %}''{% endif %}]{% if not forloop.last %},{% endif %}
+{% endfor %}
+        ]);
+
+        var options = {
+          title: 'Seen by date',
+          legend: {position:'none'}
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('entries_by_date'));
+        chart.draw(data, options);
+      });
+      
+{% else %}
+
+      google.setOnLoadCallback(function() {
+        var data = google.visualization.arrayToDataTable([
+          ['Month', 'Screenings'],
+{% for month in stats.months %}
+          ['{{ month.month_abbr }} {{ month.year }}',  {{ month.total }}],
+{% endfor %}
+        ]);
+
+        var options = {
+          title: 'Movies per Month',
+          legend: {position:'none'}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('entries_by_date'));
+        chart.draw(data, options);
+      });
+
+{% endif %}
+
+
+
+
+
+
+      google.setOnLoadCallback(function(){
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Rating');
+        data.addColumn('number', 'Screenings');
+        data.addRows([
+		  ['Up', {{ stats.thumb.all.up }}],
+		  ['Down', {{ stats.thumb.all.down }}]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Review (includes repeats & walkouts)', 'legend': {'position':'bottom'}};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('thumb_all'));
+        chart.draw(data, options);
+      });
+      
+
+
+
+
+
+
+
+      google.setOnLoadCallback(function(){
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Rating');
+        data.addColumn('number', 'Screenings');
+        data.addRows([
+		  ['Up', {{ stats.thumb.first_timers.up }}],
+		  ['Down', {{ stats.thumb.first_timers.down }}]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Review (excludes repeats & walkouts)', 'legend': {'position':'bottom'}};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('thumb_first_timers'));
+        chart.draw(data, options);
+      });
+    </script>
 </head>
 <body>
 <h1>{% if year < 2011 %}Some {% endif %}Films Seen in {{ year }}</h1>
@@ -210,6 +446,19 @@ tr.video td.movie .m2 {
 {% endfor %}
 </select> by <a href="http://zmcghee.com/">Zack McGhee</a>.</form>
 <div id="c">
+<div id="stats">
+<ul id="overview">
+<li id="total-seen"><strong>{{ stats.total_seen }}</strong><span> films seen in their entirety</span></li>
+<li id="walkouts"><strong>{{ stats.walkouts }}</strong><span> walkouts</span></li>
+<li id="in-3d"><strong>{{ stats.in_3d }}</strong><span> in awful, unnecessary 3D</span></li>
+</ul>
+<div id="entries_by_date"></div>
+<div id="entry_overview"></div>
+<div id="venue_chart_div"></div>
+<div id="alamo_chart_div"></div>
+<div id="thumb_first_timers"></div>
+<div id="thumb_all"></div>
+</div>
 <div id="log">
 	<table cellpadding="0" cellspacing="0">
 		<thead>
@@ -251,7 +500,7 @@ tr.video td.movie .m2 {
 {% endfor %}
 		</tbody>
 	</table>
-<p><a href="http://findicons.com/icon/164547/control_repeat?id=166475">Repeat icon</a> by <a href="http://www.fatcow.com/">FatCow Web Hosting</a>. <a href="http://findicons.com/icon/207175/generic_vhs">Video icon</a> by Steven W. Smith. Yes, that is my thumb.</p>
+<p><span class="mobile">Slashes indicate a repeat viewing. An asterisk indicates a movie was seen on home video. </span><a href="http://findicons.com/icon/164547/control_repeat?id=166475">Repeat icon</a> by <a href="http://www.fatcow.com/">FatCow Web Hosting</a>. <a href="http://findicons.com/icon/207175/generic_vhs">Video icon</a> by Steven W. Smith. Yes, that is my thumb.</p>
 </div>
 </div>
 </body>
