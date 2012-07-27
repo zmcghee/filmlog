@@ -1,4 +1,4 @@
-from conf.environments.dev import DEBUG
+from conf.environment import DEBUG
 from conf.secret import ADMINS, DATABASES, PROJECT_PATH, SECRET_KEY
 
 TEMPLATE_DEBUG = DEBUG
