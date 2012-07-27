@@ -1,5 +1,6 @@
 import datetime
 
+from django.conf import settings
 from django.db import connection, models, transaction
 
 from filmlog.utils import dates_between, months_between
@@ -12,7 +13,12 @@ class EntryManager(models.Manager):
 	@property
 	def year_list(self):
 		cursor = connection.cursor()
-		cursor.execute("SELECT DISTINCT STRFTIME('%%Y', date) AS year FROM filmlog_entry;")
+		if 'sqlite' in settings.DATABASES['default']['ENGINE']:
+			cursor.execute("SELECT DISTINCT STRFTIME('%%Y', date) AS year FROM filmlog_entry;")
+		elif 'mysql' in settings.DATABASES['default']['ENGINE']:
+			cursor.execute("SELECT DISTINCT date_format(date, '%Y') AS year FROM filmlog_entry;")
+		else:
+			raise NotImplementedError("EntryManager.year_list custom SQL query not implemented for this backend.")
 		return [int(row[0]) for row in cursor.fetchall()]
 
 	def between(self, start_date, end_date):
@@ -65,13 +71,24 @@ class EntryManager(models.Manager):
 			end_month = "%04d-%02d" % (end_month.year, end_month.month)
 		start_year, start_month = [int(a) for a in start_month.split("-")[:2]]
 		end_year, end_month = [int(a) for a in end_month.split("-")[:2]]
-		sql = """SELECT id, date, month, COUNT(month) as total FROM (
-					SELECT id, date, strftime('%%%%m', date) as month
-					FROM `filmlog_entry`
-					WHERE date >='%04d-%02d-01' AND date <='%04d-%02d-31'
-					ORDER BY date DESC 
-				 )
-				 GROUP BY month""" % (start_year, start_month, end_year, end_month)
+		if 'sqlite' in settings.DATABASES['default']['ENGINE']:
+			sql = """SELECT id, date, month, COUNT(month) as total FROM (
+						SELECT id, date, strftime('%%%%m', date) as month
+						FROM `filmlog_entry`
+						WHERE date >='%04d-%02d-01' AND date <='%04d-%02d-31'
+						ORDER BY date DESC 
+					 )
+					 GROUP BY month""" % (start_year, start_month, end_year, end_month)
+		elif 'mysql' in settings.DATABASES['default']['ENGINE']:
+			sql = """SELECT id, date, month, COUNT(month) as total FROM (
+						SELECT id, date, date_format(date, '%%%%m') as month
+						FROM `filmlog_entry`
+						WHERE date >='%04d-%02d-01' AND date <='%04d-%02d-31'
+						ORDER BY date DESC 
+					 ) as a
+					 GROUP BY month""" % (start_year, start_month, end_year, end_month)
+		else:
+			raise NotImplementedError("EntryManager.year_list custom SQL query not implemented for this backend.")
 		result = self.raw(sql)
 		if allow_gaps:
 			if json:
