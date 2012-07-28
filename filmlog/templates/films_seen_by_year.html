@@ -5,6 +5,7 @@
 	<meta charset="utf-8" />
 	<meta id="viewport" name="viewport" content="initial-scale=1.0;minimum-scale=1.0; maximum-scale=1.0" />
 	<title>{% if year < 2011 %}Some {% endif %}Films Seen in {{ stats.title }}</title>
+	<meta name="description" content="An {% if year < 2011 %}incomplete {% endif %}interactive list and data visualization of movies seen in {{ stats.title }} by Zack McGhee." />
 	<script>function imdb_ok(){a=true;if(b=window.localStorage){c=b.getItem("imdb_ok");if(c)return a;if(confirm("You're about to head over to IMDb. Is that cool?")){b.setItem("imdb_ok",a);return a}return false}}</script>
 	<script type="text/javascript" src="//use.typekit.net/rhb1zic.js"></script>
 	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
@@ -576,8 +577,8 @@ tr.video td.movie .m2 {
 {% endfor %}
 		</tbody>
 	</table>
-<p><span class="non-mobile">Data visualization powered by <a href="https://developers.google.com/chart/">Google Charts</a>. <a href="http://findicons.com/icon/164547/control_repeat?id=166475">Repeat icon</a> by <a href="http://www.fatcow.com/">FatCow Web Hosting</a>. <a href="http://findicons.com/icon/207175/generic_vhs">Video icon</a> by Steven W. Smith. </span>Fonts by <a href="http://typekit.com">TypeKit</a>. Yes, that is my thumb.</p>
 </div>
+<p><span class="non-mobile">Data visualization powered by <a href="https://developers.google.com/chart/">Google Charts</a>. <a href="http://findicons.com/icon/164547/control_repeat?id=166475">Repeat icon</a> by <a href="http://www.fatcow.com/">FatCow Web Hosting</a>. <a href="http://findicons.com/icon/207175/generic_vhs">Video icon</a> by Steven W. Smith. </span>Fonts by <a href="http://typekit.com">TypeKit</a>. Yes, that is my thumb.</p>
 </div>
 </body>
 </html>
