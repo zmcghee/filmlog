@@ -527,7 +527,7 @@ h1 {
 <option{% if option == year and not stats.dates %} selected{% endif %}>{{ option }}</option>
 {% if option == year %}
 {% for month in months %}
-<option value="{{ month.month }}"{% if stats.title == month.month_and_year %} selected{% endif %}> - {{ month.month_name|slice:":3" }}</option><!-- {{ month.month_and_year }} -->
+<option value="{{ month.month }}"{% if stats.title == month.month_and_year %} selected{% endif %}> - {{ month.month_name|slice:":3" }}</option>
 {% endfor %}
 {% endif %}
 {% endfor %}
