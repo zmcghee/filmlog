@@ -5,7 +5,39 @@ from django.db import connection, models, transaction
 
 from filmlog.utils import dates_between, months_between
 
+class EntryQuerySet(models.query.QuerySet):
+	def film(self):
+		return self.filter(format__in=['0','I','S'])
+
+	def digital(self, theatrical_only=False, video_only=False):
+		from filmlog.models import Venue
+		entries = self.exclude(format__in=['0','I','S'])
+		theatrical_filter = {'venue__in': Venue.objects.theatrical(True)}
+		if theatrical_only:
+			entries = entries.filter(**theatrical_filter)
+		if video_only:
+			entries = entries.exclude(**theatrical_filter)
+		return entries
+
+	def theatrical(self):
+		from filmlog.models import Venue
+		return self.filter(venue__in=Venue.objects.theatrical(True))
+
+	def video(self):
+		from filmlog.models import Venue
+		return self.exclude(venue__in=Venue.objects.theatrical(True))
+
 class EntryManager(models.Manager):
+	def get_query_set(self):
+		model = models.get_model('filmlog', 'Entry')
+		return EntryQuerySet(model)
+
+	def __getattr__(self, attr, *args):
+		try:
+			return getattr(self.__class__, attr, *args)
+		except AttributeError:
+			return getattr(self.get_query_set(), attr, *args)
+
 	@property
 	def walkout_list(self):
 		return self.get_query_set().filter(walkout=True).values_list('movie', flat=True)

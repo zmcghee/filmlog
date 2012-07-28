@@ -40,7 +40,23 @@ def stats(start_date, end_date):
 		'release_year': {
 			'threshold': release_year_threshold,
 			'repertory': entries.filter(movie__premiere_year__lt=release_year_threshold).count(),
-			'current': entries.filter(movie__premiere_year__gte=release_year_threshold).count()
+			'current': entries.filter(movie__premiere_year__gte=release_year_threshold).count(),
+			'theatrical': {
+				'repertory': entries.theatrical().filter(movie__premiere_year__lt=release_year_threshold).count(),
+				'current': entries.theatrical().filter(movie__premiere_year__gte=release_year_threshold).count(),
+			},
+			'video': {
+				'repertory': entries.video().filter(movie__premiere_year__lt=release_year_threshold).count(),
+				'current': entries.video().filter(movie__premiere_year__gte=release_year_threshold).count(),
+			}
+		},
+		'formats': {
+			'theatrical': {
+				'total': entries.theatrical().count(),
+				'film': entries.film().count(),
+				'digital': entries.digital(theatrical_only=True).count()
+			},
+			'video': entries.digital(video_only=True).count()
 		}
 	}
 	if start_date[:7] == end_date[:7]:

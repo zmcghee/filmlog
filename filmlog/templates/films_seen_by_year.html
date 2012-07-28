@@ -472,12 +472,12 @@ h1 {
         data.addColumn('string', 'Type');
         data.addColumn('number', 'Screenings');
         data.addRows([
-		  ['Current Releases', {{ stats.release_year.current }}],
-		  ['Repertory', {{ stats.release_year.repertory }}]
+		  ['Current Releases', {{ stats.release_year.theatrical.current }}],
+		  ['Repertory', {{ stats.release_year.theatrical.repertory }}]
         ]);
 
         // Set chart options
-        var options = {'title':'Current Releases vs. Repertory (Pre-{{ stats.release_year.threshold }})'};
+        var options = {'title':'In Theaters: Current Releases vs. Repertory (Pre-{{ stats.release_year.threshold }})'};
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('screening_type'));
@@ -486,6 +486,45 @@ h1 {
 
 
 
+      google.setOnLoadCallback(function(){
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Type');
+        data.addColumn('number', 'Screenings');
+        data.addRows([
+		  ['In Theaters', {{ stats.formats.theatrical.total }}],
+		  ['On Video', {{ stats.formats.video }}]
+        ]);
+
+        // Set chart options
+        var options = {'title':'In Theaters vs. Home Video'};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('theatrical_vs_video'));
+        chart.draw(data, options);
+      });
+
+
+
+      google.setOnLoadCallback(function(){
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Type');
+        data.addColumn('number', 'Screenings');
+        data.addRows([
+		  ['Film Format', {{ stats.formats.theatrical.film }}],
+		  ['Digital Format', {{ stats.formats.theatrical.digital }}]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Theatrical-only format breakdown'};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('theatrical_formats'));
+        chart.draw(data, options);
+      });
     </script>
 </head>
 <body class="{% if stats.dates %}month{% else %}year{% endif %}-view">
@@ -513,6 +552,8 @@ h1 {
 <div id="venue_chart_div"></div>
 <div id="alamo_chart_div"></div>
 <div id="screening_type"></div>
+<div id="theatrical_vs_video"></div>
+<div id="theatrical_formats"></div>
 <div id="thumb_first_timers"></div>
 <div id="thumb_all"></div>
 </div>
