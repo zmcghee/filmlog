@@ -24,19 +24,12 @@ body {
 	max-width:1100px;
 }
 
-.desktop {
+.non-mobile {
 	display:inline;
 }
 
-.mobile {
-	display:none;
-}
-
 @media only screen and (max-device-width: 480px) {
-	.mobile {
-		display:inline !important;
-	}
-	.desktop {
+	.non-mobile {
 		display:none !important;
 	}
 	body {
@@ -77,6 +70,9 @@ body {
 	tr.video.repeat td.movie .movie-title:after {
 		content:"/*";
 		font-weight:normal;
+	}
+	body p:last-child:before {
+		content:"Slashes indicate a repeat viewing. An asterisk indicates a movie was seen on home video. ";
 	}
 }
 
@@ -542,7 +538,7 @@ h1 {
 {% endfor %}
 		</tbody>
 	</table>
-<p><span class="mobile">Slashes indicate a repeat viewing. An asterisk indicates a movie was seen on home video. </span><span class="desktop"><a href="http://findicons.com/icon/164547/control_repeat?id=166475">Repeat icon</a> by <a href="http://www.fatcow.com/">FatCow Web Hosting</a>. <a href="http://findicons.com/icon/207175/generic_vhs">Video icon</a> by Steven W. Smith. </span>Yes, that is my thumb.</p>
+<p><span class="non-mobile"><a href="http://findicons.com/icon/164547/control_repeat?id=166475">Repeat icon</a> by <a href="http://www.fatcow.com/">FatCow Web Hosting</a>. <a href="http://findicons.com/icon/207175/generic_vhs">Video icon</a> by Steven W. Smith. </span>Yes, that is my thumb.</p>
 </div>
 </div>
 </body>
