@@ -21,6 +21,24 @@ class EntryManager(models.Manager):
 			raise NotImplementedError("EntryManager.year_list custom SQL query not implemented for this backend.")
 		return [int(row[0]) for row in cursor.fetchall()]
 
+	@property
+	def month_list(self):
+		return self.month_list_for_year(None)
+
+	def month_list_for_year(self, year):
+		cursor = connection.cursor()
+		if 'sqlite' in settings.DATABASES['default']['ENGINE']:
+			sql = "SELECT DISTINCT STRFTIME('%%Y/%%m', date) AS month, case STRFTIME('%%m', date) when '01' then 'January' when '02' then 'February' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end AS month_name, STRFTIME('%%Y', date) AS year"
+		elif 'mysql' in settings.DATABASES['default']['ENGINE']:
+			sql = "SELECT DISTINCT date_format(date, '%Y/%m') as month, date_format(date, '%M %Y') AS month_name, date_format(date, '%Y') as year"
+		else:
+			raise NotImplementedError("EntryManager.month_list custom SQL query not implemented for this backend.")
+		sql += " FROM filmlog_entry"
+		if year is not None:
+			sql += " WHERE date >= '%s-01-01' AND date <= '%s-12-31'" % (int(year), int(year))
+		cursor.execute(sql)
+		return [{'month': row[0], 'month_name': row[1], 'year': row[2], 'month_and_year': "%s %s" % (row[1], row[2])} for row in cursor.fetchall()]
+
 	def between(self, start_date, end_date):
 		return self.filter(date__gte=start_date, date__lte=end_date)
 

@@ -474,19 +474,20 @@ h1 {
 <h1>{% if year < 2011 %}Some {% endif %}Films Seen in {{ stats.title }}</h1>
 <form action="#" id="f">An {% if year < 2011 %}incomplete {% endif %}interactive list and data visualization of movies seen in 
 <select onchange="location.href='/movies/'+this.value+location.search">
-{% if stats.dates %}
-{# month by month #}
-{% else %}
 {% for option in years %}
-<option{% if option == year %} selected{% endif %}>{{ option }}</option>
+<option{% if option == year and not stats.dates %} selected{% endif %}>{{ option }}</option>
+{% if option == year %}
+{% for month in months %}
+<option value="{{ month.month }}"{% if stats.title == month.month_and_year %} selected{% endif %}> - {{ month.month_name|slice:":3" }}</option><!-- {{ month.month_and_year }} -->
 {% endfor %}
 {% endif %}
+{% endfor %}
 </select> by <a href="http://zmcghee.com/">Zack McGhee</a>.</form>
 <div id="c">
 <div id="stats">
 <ul id="overview">
 <li id="total-seen"><strong>{{ stats.total_seen }}</strong><span> films seen in their entirety</span></li>
-<li id="walkouts"><strong>{{ stats.walkouts }}</strong><span> walkouts</span></li>
+<li id="walkouts"><strong>{{ stats.walkouts }}</strong><span> walkout{{ stats.walkouts|pluralize }}</span></li>
 <li id="in-3d"><strong>{{ stats.in_3d }}</strong><span> in awful, unnecessary 3D</span></li>
 </ul>
 <div id="entries_by_date"></div>
