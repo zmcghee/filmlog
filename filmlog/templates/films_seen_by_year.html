@@ -42,7 +42,22 @@ body {
 	body.month-view h1 {
 		font-size:1.5em !important;
 	}
-	th.count, td.count, #stats {
+{% comment %}/* Starting to get stats available on mobile */
+	#stats {
+		min-width:100px;
+		max-width:480px !important;
+		width:auto !important;
+		padding:0 !important;
+		font-size:medium !important;
+		float:none !important;
+		border:0 !important;
+	}
+	#stats #overview { padding:0 !important; }
+	#stats div, th.count, td.count {
+		display:none;
+	}
+{% endcomment %}
+	#stats, th.count, td.count {
 		display:none;
 	}
 	th {
@@ -242,8 +257,8 @@ tr.video td.movie .m2 {
 	padding-top:1em !important;
 	padding-bottom:1em !important;
 }
-#stats #overview { overflow:auto;overflow:none;padding-left:45px !important;padding-bottom:1em !important; }
 #stats #overview, #stats #overview li { list-style:none;list-style-type:none;margin:0;padding:0; }
+#stats #overview { overflow:auto;overflow:none;padding-left:45px;padding-bottom:1em !important; }
 #stats #overview li { display:block;clear:left;padding:.2em 0; }
 #stats #overview li strong, #stats #overview li span { display:block;float:left;padding:1px 5px; }
 #stats #overview li strong { width:2em;text-align:right;background:#369;color:#fff;font-family: "hotel-solid"; }
