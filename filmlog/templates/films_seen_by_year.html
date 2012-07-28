@@ -39,6 +39,9 @@ body {
 	h1 {
 		font-size: 2.6em !important;
 	}
+	body.month-view h1 {
+		font-size:1.5em !important;
+	}
 	th.count, td.count, #stats {
 		display:none;
 	}
@@ -470,7 +473,7 @@ h1 {
 
     </script>
 </head>
-<body>
+<body class="{% if stats.dates %}month{% else %}year{% endif %}-view">
 <h1>{% if year < 2011 %}Some {% endif %}Films Seen in {{ stats.title }}</h1>
 <form action="#" id="f">An {% if year < 2011 %}incomplete {% endif %}interactive list and data visualization of movies seen in 
 <select onchange="location.href='/movies/'+this.value+location.search">
@@ -488,7 +491,7 @@ h1 {
 <ul id="overview">
 <li id="total-seen"><strong>{{ stats.total_seen }}</strong><span> films seen in their entirety</span></li>
 <li id="walkouts"><strong>{{ stats.walkouts }}</strong><span> walkout{{ stats.walkouts|pluralize }}</span></li>
-<li id="in-3d"><strong>{{ stats.in_3d }}</strong><span> in awful, unnecessary 3D</span></li>
+<li id="in-3d"><strong>{{ stats.in_3d }}</strong><span> in 3D</span></li>
 </ul>
 <div id="entries_by_date"></div>
 <div id="entry_overview"></div>

@@ -33,7 +33,7 @@ def stats(start_date, end_date):
 			}
 		},
 		'total_seen': entries.exclude(walkout=True).count(),
-		'walkouts': first_timers.filter(walkout=True).count(),
+		'walkouts': entries.filter(walkout=True).count(),
 		'in_3d': entries.filter(in_3d=True).count(),
 		'first_timers': first_timers.exclude(walkout=True).count(),
 		'repeats': entries.exclude(walkout=True).filter(repeat=True).count(),
