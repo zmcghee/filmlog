@@ -6,13 +6,11 @@
 	<meta id="viewport" name="viewport" content="initial-scale=1.0;minimum-scale=1.0; maximum-scale=1.0" />
 	<title>{% if year < 2011 %}Some {% endif %}Films Seen in {{ stats.title }}</title>
 	<meta name="description" content="An {% if year < 2011 %}incomplete {% endif %}interactive list and data visualization of movies seen in {{ stats.title }} by Zack McGhee." />
-	<script>function imdb_ok(){a=true;if(b=window.localStorage){c=b.getItem("imdb_ok");if(c)return a;if(confirm("You're about to head over to IMDb. Is that cool?")){b.setItem("imdb_ok",a);return a}return false}}</script>
-	<script type="text/javascript" src="//use.typekit.net/rhb1zic.js"></script>
-	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-<style type="text/css">@import "/movies/filmlog.css"</style>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
-  google.load('visualization', '1.0', {'packages':['corechart']});
+	<style>@import "/movies/filmlog.css"</style>
+	<script src="//use.typekit.net/rhb1zic.js"></script>
+	<script src="//www.google.com/jsapi"></script>
+	<script>try{Typekit.load();}catch(e){}google.load('visualization', '1.0', {'packages':['corechart']});function imdb_ok(){a=true;if(b=window.localStorage){c=b.getItem("imdb_ok");if(c)return a;if(confirm("You're about to head over to IMDb. Is that cool?")){b.setItem("imdb_ok",a);return a}return false}}
+  /* ================== Charts ================== */
   /* First-time viewings vs. Repeats vs. Walkouts */
   google.setOnLoadCallback(function(){
 	var data = new google.visualization.DataTable();
@@ -140,13 +138,11 @@
 	var options = {'title':'Theatrical-only format breakdown'};
 	var chart = new google.visualization.PieChart(document.getElementById('theatrical_formats'));
 	chart.draw(data, options);
-  });
-</script>
+  });</script>
 </head>
 <body class="{% if stats.dates %}month{% else %}year{% endif %}-view">
 <h1>{% if year < 2011 %}Some {% endif %}Films Seen in {{ stats.title }}</h1>
-<form action="#" id="f">An {% if year < 2011 %}incomplete {% endif %}interactive list and data visualization of movies seen in 
-<select onchange="location.href='/movies/'+this.value+location.search">
+<form action="#" id="f">An {% if year < 2011 %}incomplete {% endif %}interactive list and data visualization of movies seen in <select onchange="location.href='/movies/'+this.value+location.search">
 {% for option in years %}
 <option{% if option == year and not stats.dates %} selected{% endif %}>{{ option }}</option>
 {% if option == year %}
@@ -223,18 +219,15 @@
 '4'+'6'+';'+'m'+'c'+'&'+'#'+'1'+'0'+'3'+';'+'h'+'e'+'e'+'&'+'#'+'6'+'4'+';'+'g'+'m'+'a'+'i'+'l'+'&'+
 '#'+'4'+'6'+';'+'c'+'o'+'m'+'<'+'/'+'a'+'>');</script></p>
 </div>
-<script type="text/javascript">
-
+<script>
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-33720508-1']);
   _gaq.push(['_trackPageview']);
-
   (function() {
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
-
 </script>
 </body>
 </html>
