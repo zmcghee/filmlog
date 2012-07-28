@@ -14,6 +14,7 @@ def stats(start_date, end_date):
 			'name': venue.name,
 			'total': venue.entries.between(start_date, end_date).count()
 		})
+	release_year_threshold = int(start_date[:4])-2
 	stats = {
 		'venues': {
 			'all': all_venues,
@@ -35,7 +36,12 @@ def stats(start_date, end_date):
 		'walkouts': first_timers.filter(walkout=True).count(),
 		'in_3d': entries.filter(in_3d=True).count(),
 		'first_timers': first_timers.exclude(walkout=True).count(),
-		'repeats': entries.exclude(walkout=True).filter(repeat=True).count()
+		'repeats': entries.exclude(walkout=True).filter(repeat=True).count(),
+		'release_year': {
+			'threshold': release_year_threshold,
+			'repertory': entries.filter(movie__premiere_year__lt=release_year_threshold).count(),
+			'current': entries.filter(movie__premiere_year__gte=release_year_threshold).count()
+		}
 	}
 	if start_date[:7] == end_date[:7]:
 		stats['dates'] = Entry.objects.day_count(start_date, end_date, allow_gaps=False, json=True)
