@@ -270,3 +270,8 @@ tr.video td.movie .m2 {
 	float: left;
 	width: 235px;
 }
+
+body p:last-child {
+	padding-top: 1em;
+	clear: right;
+}
