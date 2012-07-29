@@ -50,7 +50,7 @@ def films_seen_by_year(request, year=None, month=None):
 			   'stats': stats(start_date, end_date),
 			   'months': Entry.objects.month_list_for_year(year)
 			  }
-	return render(request, 'films_seen_by_year.html', context)
+	return render(request, 'filmlog.html', context)
 
 def json_date_range(request, *args):
 	context = stats(*args)
