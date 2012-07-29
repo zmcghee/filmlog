@@ -6,7 +6,7 @@
 	<meta id="viewport" name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
 	<title>{% if year < 2011 %}Some {% endif %}Films Seen in {{ stats.title }}</title>
 	<meta name="description" content="An {% if year < 2011 %}incomplete {% endif %}interactive list and data visualization of movies seen in {{ stats.title }} by Zack McGhee." />
-	<style>@import "/movies/filmlog.css"</style>
+	<style>@import "/movies/filmlog.css";</style>
 	<script src="//use.typekit.net/rhb1zic.js"></script>
 	<script src="//www.google.com/jsapi"></script>
 	<script>try{Typekit.load();}catch(e){}google.load('visualization', '1.0', {'packages':['corechart']});function imdb_ok(){a=true;if(b=window.localStorage){c=b.getItem("imdb_ok");if(c)return a;if(confirm("You're about to head over to IMDb. Is that cool?")){b.setItem("imdb_ok",a);return a}return false}}function charts_disabled(){try{if(window.getComputedStyle(document.getElementById('stats')).getPropertyValue('display')=='none')return true}catch(e){}return false}
