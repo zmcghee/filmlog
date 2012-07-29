@@ -9,10 +9,11 @@
 	<style>@import "/movies/filmlog.css"</style>
 	<script src="//use.typekit.net/rhb1zic.js"></script>
 	<script src="//www.google.com/jsapi"></script>
-	<script>try{Typekit.load();}catch(e){}google.load('visualization', '1.0', {'packages':['corechart']});function imdb_ok(){a=true;if(b=window.localStorage){c=b.getItem("imdb_ok");if(c)return a;if(confirm("You're about to head over to IMDb. Is that cool?")){b.setItem("imdb_ok",a);return a}return false}}
+	<script>try{Typekit.load();}catch(e){}google.load('visualization', '1.0', {'packages':['corechart']});function imdb_ok(){a=true;if(b=window.localStorage){c=b.getItem("imdb_ok");if(c)return a;if(confirm("You're about to head over to IMDb. Is that cool?")){b.setItem("imdb_ok",a);return a}return false}}function charts_disabled(){try{if(window.getComputedStyle(document.getElementById('stats')).getPropertyValue('display')=='none')return true}catch(e){}return false}
   /* ================== Charts ================== */
   /* First-time viewings vs. Repeats vs. Walkouts */
   google.setOnLoadCallback(function(){
+	if(charts_disabled())return;
 	var data = new google.visualization.DataTable();
 	data.addColumn('string', 'Type');
 	data.addColumn('number', 'Screenings');
@@ -27,6 +28,7 @@
   });
   /* Theatrical venues (with Alamo grouped) */
   google.setOnLoadCallback(function(){
+	if(charts_disabled())return;
 	var data = new google.visualization.DataTable();
 	data.addColumn('string', 'Theater');
 	data.addColumn('number', 'Screenings');
@@ -38,6 +40,7 @@
   });
   /* Alamo-only venue breakout */
   google.setOnLoadCallback(function(){
+	if(charts_disabled())return;
 	var data = new google.visualization.DataTable();
 	data.addColumn('string', 'Theater');
 	data.addColumn('number', 'Screenings');
@@ -49,6 +52,7 @@
   });
 {% if stats.dates %}/* Day-by-day screenings for month view */
   google.setOnLoadCallback(function(){
+	if(charts_disabled())return;
   	var date_from_str = function(date_str){
   		var d = date_str.split('-');
   		return new Date(d[0], d[1]-1, d[2]);
@@ -64,7 +68,8 @@
 	var chart = new google.visualization.LineChart(document.getElementById('entries_by_date'));
 	chart.draw(data, options);
   });{% else %}  /* Month-by-month screenings for year view */
-  google.setOnLoadCallback(function() {
+  google.setOnLoadCallback(function(){
+  	if(charts_disabled())return;
 	var data = google.visualization.arrayToDataTable([
 	  ['Month', 'Screenings'],
 {% for month in stats.months %}	  ['{{ month.month_abbr }} {{ month.year }}',  {{ month.total }}],
@@ -75,6 +80,7 @@
   });{% endif %}
   /* Thumb (including repeats & walkouts) */
   google.setOnLoadCallback(function(){
+	if(charts_disabled())return;
 	var data = new google.visualization.DataTable();
 	data.addColumn('string', 'Rating');
 	data.addColumn('number', 'Screenings');
@@ -89,6 +95,7 @@
   });
   /* Thumb (excluding repeats & walkouts) */
   google.setOnLoadCallback(function(){
+	if(charts_disabled())return;
 	var data = new google.visualization.DataTable();
 	data.addColumn('string', 'Rating');
 	data.addColumn('number', 'Screenings');
@@ -102,6 +109,7 @@
   });
   /* Theatrical rep vs. contemporary */
   google.setOnLoadCallback(function(){
+	if(charts_disabled())return;
 	var data = new google.visualization.DataTable();
 	data.addColumn('string', 'Type');
 	data.addColumn('number', 'Screenings');
@@ -115,6 +123,7 @@
   });
   /* Theatrical vs. Video */
   google.setOnLoadCallback(function(){
+	if(charts_disabled())return;
 	var data = new google.visualization.DataTable();
 	data.addColumn('string', 'Type');
 	data.addColumn('number', 'Screenings');
@@ -128,6 +137,7 @@
   });
   /* Theatrical - Film vs. Digital */
   google.setOnLoadCallback(function(){
+	if(charts_disabled())return;
 	var data = new google.visualization.DataTable();
 	data.addColumn('string', 'Type');
 	data.addColumn('number', 'Screenings');
