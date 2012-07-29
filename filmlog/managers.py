@@ -62,7 +62,7 @@ class EntryManager(models.Manager):
 		if 'sqlite' in settings.DATABASES['default']['ENGINE']:
 			sql = "SELECT DISTINCT STRFTIME('%%Y/%%m', date) AS month, case STRFTIME('%%m', date) when '01' then 'January' when '02' then 'February' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end AS month_name, STRFTIME('%%Y', date) AS year"
 		elif 'mysql' in settings.DATABASES['default']['ENGINE']:
-			sql = "SELECT DISTINCT date_format(date, '%Y/%m') as month, date_format(date, '%M %Y') AS month_name, date_format(date, '%Y') as year"
+			sql = "SELECT DISTINCT date_format(date, '%Y/%m') as month, date_format(date, '%M') AS month_name, date_format(date, '%Y') as year"
 		else:
 			raise NotImplementedError("EntryManager.month_list custom SQL query not implemented for this backend.")
 		sql += " FROM filmlog_entry"
