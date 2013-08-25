@@ -33,7 +33,8 @@
 	data.addColumn('string', 'Theater');
 	data.addColumn('number', 'Screenings');
 	data.addRows([{% for venue in stats.venues.all %}{% if venue.total > 0 %}
-	  ['{{ venue.name|addslashes }}', {{ venue.total }}]{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}	]);
+	  ['{{ venue.name|addslashes }}', {{ venue.total }}]{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}
+	]);
 	var options = {'title':'Theatrical Venues (with Alamo grouped)'};
 	var chart = new google.visualization.PieChart(document.getElementById('venue_chart_div'));
 	chart.draw(data, options);
@@ -45,7 +46,8 @@
 	data.addColumn('string', 'Theater');
 	data.addColumn('number', 'Screenings');
 	data.addRows([{% for venue in stats.venues.alamo %}{% if venue.total > 0 %}
-	  ['{{ venue.name|addslashes }}', {{ venue.total }}]{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}	]);
+	  ['{{ venue.name|addslashes }}'.replace(/Alamo Drafthouse (at the )?/, ''), {{ venue.total }}]{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}
+	]);
 	var options = {'title':'Alamo-only venue breakout'};
 	var chart = new google.visualization.PieChart(document.getElementById('alamo_chart_div'));
 	chart.draw(data, options);
@@ -192,7 +194,7 @@
 		<tbody>
 {% for entry in entries %}
 			<tr class="{% cycle 'odd' 'even' %}{% if entry.video %} video{% endif %}{% if entry.walkout %} walkout{% endif %}{% if entry.repeat %} repeat{% endif %}">
-				<td class="count">{% if not entry.walkout %}<div>{% if order_by == 'reverse' %}{% iterator reverse %}{% else %}{% iterator 0 %}{% endif %}.</div>{% endif %}</td>
+				<td class="count"><div>{% if not entry.walkout %}{% if order_by == 'reverse' %}{% iterator reverse %}{% else %}{% iterator 0 %}{% endif %}.{% else %}W/O{% endif %}</div></td>
 				<td class="date">
 					<span class="month">{{ entry.date|date:"M" }} </span>
 					<span class="day">{{ entry.date|date:"d" }}</span>

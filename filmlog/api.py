@@ -65,9 +65,10 @@ def stats(start_date, end_date):
 	else:
 		today = datetime.date.today()
 		stats['months'] = Entry.objects.month_count(start_date, end_date, allow_gaps=False, json=True)
+		last_entry_month = entries[(entries.count() - 1)].date.month
 		if (start_date[:4] == end_date[:4]) and (
 			len(stats['months']) == 12 or (
-				int(end_date[:4])==today.year and len(stats['months'])==today.month
+				int(end_date[:4])==today.year and len(stats['months'])==last_entry_month
 			)
 		):
 			stats['title'] = str(stats['months'][0]['year'])
